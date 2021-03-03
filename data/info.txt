@@ -1,0 +1,99 @@
+ALORS
+
+Projet: réaliser un site de streaming audio (type Spotify, Deezer ...)
+
+Contraintes code: aucune.
+AJAX OBLIGATOIRE
+SEPARER ISOLER CSS HTML JS
+
+///////// REALISER LA MAQUETTE DU SITE:
+
+    Même interface graphique pour tous support (voir MAQUETTE)
+
+///////// LocalStorage:
+
+    L'utilisateur souhaite pouvoir s'inscrire et se connecter
+    OBLIGATOIRE POUR ACCEDER AUX MUSIQUES
+
+    L'utilisateur souhaite, une fois connecté, pouvoir stocker ses musiques en favoris ou dans différentes playlists
+
+    Idée JSON user = {
+        pseudo
+        firstname
+        lastname
+        favorites
+        user_ID (UUID v4)
+    }
+
+    playlists [] stocké à part dans le LocalStorage, on veut qu'un user ait accès à TOUTES les playlists même celles créées par d'autres users
+
+    JSON playlist = {
+        name
+        playlist_ID
+        user_ID (ID de l'utilisateur qui a créé la playlist) (UUID v4)
+        contents
+    }
+
+///////// API
+
+    Héberger le JSON fourni sur github et l'uttiliser au format RAW (lien: https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/jsonMusique.json)
+    Il contient TOUTES les musiques, artistes, lien vers les fichiers MP3, image de l’album. 
+
+    Se servir de l'API via AJAX (
+
+        $.ajax({
+            url
+            method
+            dataType
+
+            error: function
+            success: function
+            complete: function
+        })
+    )
+
+    Utiliser le JSON pour lister les musiques sur la page d’accueil et effectuer les
+    recherches (par musique ET par artiste)
+
+    Point Bonus : Eviter les doublons dans la recherche. Ex : si je tape « Bonjour » et que j’ai une
+    musique qui s’appelle Bonjour et qui a comme artiste Bonjour elle ne doit apparaitre qu’une fois
+
+///////// MANIPULATION DU DOM
+    
+    Utiliser une balise audio pour modifiler la musique en cours
+    Progress bar qui avance au fil du morceau
+    CALCULER la durée de la piste audio (https://ourcodeworld.com/articles/read/1036/how-to-retrieve-the-duration-of-a-mp3-wav-audio-file-in-the-browser-with-javascript)
+    PROGRESS BAR MISE A JOUR DE MANIERE DYNAMIQUE
+
+///////// UTILISATEUR
+
+    L'utilisateur doit pouvoir lire un morceau, l'ajouter à ses favoris, se déconnecter.
+
+    Pour s'inscrire:
+        MAIL VALIDE
+        MOT DE PASSE
+        PSEUDO
+        IMAGE DE PROFIL
+
+    MOT DE PASSE: 
+        6 caractères min, au moins 1 chiffre et au moins 1 caractère spécial         REGEX
+
+                                            ^(?=.*[A-Za-z])(?=.*\d)(?=.*[\&\#\-\_\+\=\@\{\}\[\]\(\)])[A-Za-z\d\&\#\-\_\+\=\@\{\}\[\]\(\)]{6,}$
+
+    Pour se connecter:
+        Par pseudo OU Adresse mail
+
+    Que peut faire l'utilisateur ?
+        CREER UNE OU PLUSIEURS PLAYLIST
+        METTRE EN FAVORIS UNE OU PLUSIEURS MUSIQUES
+        ACCEDER AUX MUSIQUES, LIRE DES MUSIQUES
+        ACCEDER AUX PLAYLISTS
+        ACCEDER AUX MUSIQUES MISES EN FAVORIS
+
+    Point bonus : Vous pouvez ajouter vos propres musiques au fichier JSON (il vous faudra
+    simplement héberger vos fichier mp3 en ligne afin que ceux-ci soit accessibles depuis internet
+
+
+
+    
+
