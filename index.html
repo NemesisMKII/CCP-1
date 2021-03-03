@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>titre</title>
+        <!-- Bootstrap 5.0.0-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <!-- CSS style -->
+        <link rel="stylesheet" type="text/css" href="./style/style.css" />
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    </head>
+    <body>
+        <h1 class="text-center">Module connexion/inscription</h1>
+        <form class="text-center">
+            <header>
+                <h2>inscription</h2>
+                <input type="text" placeholder="mail" id="usermail">
+                <input type="text" placeholder="pseudo" id="userpseudo">
+                <input type="text" placeholder="mdp" id="usermdp">
+                <button class="btn btn-success d-block mx-auto" id="btnInscription">inscription</button>
+            </header>
+
+        </form>
+        <form class="text-center">
+            <header>
+                <h2>Connexion</h2>
+                <input type="text" placeholder="mail/pseudo" id="login">
+                <input type="text" placeholder="password" id="password">
+                <input type="checkbox" id="staytune"> Rester connecté
+                <button class="btn btn-success d-block mx-auto" id="btnConnexion">Connexion</button>
+            </header>
+        </form>
+        <script src="style/default.js"></script>
+    </body>
+</html>
