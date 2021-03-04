@@ -35,12 +35,35 @@ footer img {
 
 #musictitle {
     display: block;
+    width: 500px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -250px !important;
+    font-size: 2.5rem;
+}
+
+#artistname {
+    display: block;
     width: 150px;
     text-align: center;
     position: absolute;
     top: 20%;
     left: 50%;
-    margin-left: -75px !important;
+    margin-left: -50px !important;
+    font-size: 2rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#artistname span {
+    display: inline-block;
+    animation: scroll-loop 5s linear infinite;
+}
+
+#artistname {
+    animation: 10s scroll-loop linear infinite;
 }
 
 #sound {
@@ -48,11 +71,25 @@ footer img {
 }
 
 #progress {
-    height: 10px;
+    height: 20px;
     width: 400px;
 }
 
 #playbar {
     margin-left: -200px ;
-    align-self: center;
+    align-self: flex-end;
+    margin-bottom: 5%;
+}
+
+i {
+    font-size: 2.5rem;
+}
+
+@keyframes scroll-loop {
+    from {
+        margin-left: 150%;
+    }
+    to {
+        margin-left: -200%;
+    }
 }

@@ -71,6 +71,7 @@ $(document).ready(() => {
                 for (item in data.songs) {
                     if (data.songs[item].id == songID) {
                         $('#musictitle').html(data.songs[item].name)
+                        $('#artistname span').html(data.songs[item].artist)
                         $('#music').attr('src', data.songs[item].song)
                         $('#songimg').attr('src', data.songs[item].image)
                         console.log(data.songs[item]);
