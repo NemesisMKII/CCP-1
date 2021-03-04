@@ -4,6 +4,10 @@ html, body {
     padding: 0;
 }
 
+body {
+    border: 0.0001px solid transparent;
+}
+
 ul {
     list-style-type: none;
 }
@@ -16,8 +20,6 @@ ul, li {
 header {
     min-height: 8%;
     width: 83%;
-    border: 1px solid black;
-    position: fixed;
     left: 17%;
     top: 0;
     z-index: 10;
@@ -25,7 +27,6 @@ header {
 
 aside {
     width: 17%;
-    border: 1px solid black;
     height: 87%;
     position: fixed;
     left: 0;
@@ -34,7 +35,6 @@ aside {
 }
 
 main {
-    border: 1px solid black;
     width: 83%;
     height: 100%;
     margin-left: 17%;
