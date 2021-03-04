@@ -1,0 +1,92 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    min-height: 8%;
+    width: 83%;
+    border: 1px solid black;
+    position: fixed;
+    left: 17%;
+    top: 0;
+    z-index: 10;
+}
+
+aside {
+    width: 17%;
+    border: 1px solid black;
+    height: 87%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
+
+main {
+    border: 1px solid black;
+    width: 83%;
+    height: 100%;
+    margin-left: 17%;
+    overflow-y: scroll;
+}
+
+footer {
+    min-height: 65px;
+    height: 13%;
+    width: 100%;
+    background-color: rgb(41, 37, 37);
+    z-index: 10;
+}
+
+footer img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#playbar {
+    margin-left: -125px;
+    left: 50%;
+}
+
+#progress {
+    width: 250px;
+    height: 3px;
+    background-color: grey;
+    border-radius: 10px;
+}
+
+#soundprogress {
+    width: 100px;
+    height: 3px;
+    background-color: grey;
+    border-radius: 10px;
+}
+
+#soundprogress div {
+    background-color: white;
+    width: 75%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+#progress div {
+    background-color: white;
+    width: 75%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+i {
+    cursor: pointer;
+}

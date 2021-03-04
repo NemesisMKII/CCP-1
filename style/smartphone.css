@@ -1,0 +1,58 @@
+header {
+    width: 100%;
+    height: 13%;
+    left: 0;
+    background-color: rgb(87, 77, 77);
+}
+
+aside {
+    display: none;
+}
+
+main {
+    width: 100%;
+    margin: 0;
+    margin-top: 27.5%;
+    height: 74%;
+}
+
+main li {
+    border: 1px solid black;
+    width: 100%;
+    height: 100px;
+    font-size: 3em;
+}
+
+footer {
+    height: 13%;
+}
+
+footer img {
+    width: 200px;
+    height: 200px;
+    align-self: center;
+}
+
+#musictitle {
+    display: block;
+    width: 150px;
+    text-align: center;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin-left: -75px !important;
+}
+
+#sound {
+    display: none !important;
+}
+
+#progress {
+    height: 10px;
+    width: 400px;
+}
+
+#playbar {
+    margin-left: -200px ;
+    align-self: center;
+}

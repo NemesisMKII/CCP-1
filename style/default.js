@@ -1,4 +1,34 @@
 $(document).ready(() => {
+    $('body').hide()
+
+    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
+        $('#css').after(`
+        <!-- CSS style for mobile -->
+        <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
+        `)
+        $('body').show()
+    }
+
+    $.ajax({
+        url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+        method: "GET",
+        dataType: "json",
+
+        error: function() {
+            alert('le chargement de la liste des musiques a échoué')
+        },
+
+        success: function(data) {
+            for (item in data.songs) {
+                $('#songlist').append(`
+                <li id="${data.songs[item].id}">${data.songs[item].name}</li>
+                `)
+                console.log(data.songs[item]);
+            }
+            $('#songlist li').click(setmusic)
+        }
+    })
+
     if (!localStorage.getItem('userlist')) {
         var userlist = []
         localStorage.setItem('userlist', JSON.stringify(userlist))
@@ -9,6 +39,46 @@ $(document).ready(() => {
     $('#btnInscription').click(register)
 
     $('#btnConnexion').click(login)
+
+    $('#muteBtn').click(() => {
+        alert('click')
+    })
+
+    $('#play').click(() => {
+        if ($('#play').hasClass('fa-play')) {
+            $('#play').removeClass('fa-play')
+            $('#play').addClass('fa-pause')
+            $('#music')[0].play()
+        } else if ($('#play').hasClass('fa-pause')) {
+            $('#play').removeClass('fa-pause')
+            $('#play').addClass('fa-play')
+            $('#music')[0].pause()
+        }
+    })
+
+    function setmusic() {
+        songID = $(this).attr('id')
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+    
+            error: function() {
+                alert('le chargement de la liste des musiques a échoué')
+            },
+    
+            success: function(data) {
+                for (item in data.songs) {
+                    if (data.songs[item].id == songID) {
+                        $('#musictitle').html(data.songs[item].name)
+                        $('#music').attr('src', data.songs[item].song)
+                        $('#songimg').attr('src', data.songs[item].image)
+                        console.log(data.songs[item]);
+                    }
+                }
+            }
+        })
+    }
 
     function register(e) {
         e.preventDefault()
