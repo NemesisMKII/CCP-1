@@ -55,7 +55,7 @@ $(document).ready(() => {
             $('#music')[0].pause()
         }
     })
-
+    
     function setmusic() {
         songID = $(this).attr('id')
         $.ajax({

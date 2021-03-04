@@ -49,11 +49,6 @@ footer {
     z-index: 10;
 }
 
-footer img {
-    max-width: 90%;
-    max-height: 90%;
-}
-
 #playbar {
     margin-left: -125px;
     left: 50%;
