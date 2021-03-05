@@ -30,7 +30,50 @@ footer {
     height: 13%;
 }
 
+#imgalign {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
 footer img {
+    max-width: 20%;
+    height: 80%;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+#textcontainer {
+    width: 150px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    text-align: center;
+    line-height: 1.1em;
+    margin-left: -75px;
+}
+
+#musictitle {
+    font-size: 0.85em;
+}
+
+#artistname {
+    font-size: 0.7em;
+}
+
+#playbar {
+    width: 175px;
+    height: 100px;
+    left: 50%;
+    margin-left: -87.5px;
+    top: 50%;
+}
+
+#progress {
+    height: 3px;
+}
+
+/* footer img {
     position: absolute;
     width: 17%;
     max-height: 90%;
@@ -58,15 +101,6 @@ footer img {
     font-size: 1rem;
     white-space: nowrap;
     overflow: hidden;
-}
-
-#artistname span {
-    display: inline-block;
-    animation: scroll-loop 5s linear infinite;
-}
-
-#artistname {
-    animation: 10s scroll-loop linear infinite;
 }
 
 #sound {
@@ -100,14 +134,4 @@ i {
     transform: translateY(15%);
     height: 350px;
     width: 300px;
-}
-
-
-@keyframes scroll-loop {
-    from {
-        margin-left: 150%;
-    }
-    to {
-        margin-left: -200%;
-    }
-}
+} */

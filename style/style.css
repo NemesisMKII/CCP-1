@@ -49,16 +49,23 @@ footer {
     z-index: 10;
 }
 
-#playbar {
-    margin-left: -125px;
-    left: 50%;
-}
-
 #progress {
-    width: 250px;
     height: 3px;
     background-color: grey;
     border-radius: 10px;
+}
+
+#progress div {
+    background-color: white;
+    width: 75%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+/*
+#playbar {
+    margin-left: -125px;
+    left: 50%;
 }
 
 #soundprogress {
@@ -75,13 +82,8 @@ footer {
     border-radius: 10px;
 }
 
-#progress div {
-    background-color: white;
-    width: 75%;
-    height: 100%;
-    border-radius: 10px;
-}
 
 i {
     cursor: pointer;
 }
+*/
