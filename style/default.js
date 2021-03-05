@@ -103,6 +103,9 @@ $(document).ready(() => {
                         $('#music').attr('src', currentsong.song)
                         $('#music').attr('data-id', currentsong.id)
                         $('#songimg').attr('src', currentsong.image)
+                        /*
+                        $('#music')[0].onloadedmetadata = () => {
+                        } */
                         paused = true
                         play(paused)
                     }
