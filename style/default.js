@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    paused = true
     $('body').hide()
 
     if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
@@ -23,7 +24,6 @@ $(document).ready(() => {
                 $('#songlist').append(`
                 <li id="${data.songs[item].id}">${data.songs[item].name}</li>
                 `)
-                console.log(data.songs[item]);
             }
             $('#songlist li').click(setmusic)
         }
@@ -40,24 +40,51 @@ $(document).ready(() => {
 
     $('#btnConnexion').click(login)
 
-    $('#muteBtn').click(() => {
+    $('.muteBtn').click(() => {
         alert('click')
     })
 
-    $('#play').click(() => {
-        if ($('#play').hasClass('fa-play')) {
-            $('#play').removeClass('fa-play')
-            $('#play').addClass('fa-pause')
-            $('#music')[0].play()
-        } else if ($('#play').hasClass('fa-pause')) {
-            $('#play').removeClass('fa-pause')
-            $('#play').addClass('fa-play')
-            $('#music')[0].pause()
-        }
+    $('.play').click(() => {
+        play(paused)
     })
+
+    $('.forwards').click(changetrack)
+    $('.backwards').click(changetrack)
+
+    $('.upchevron').click(() => {
+        ($('footer > *').hasClass('delaytransition') ? $('footer > *').toggleClass('delaytransition') : "")
+        $('.musicfull').toggleClass('delaytransition')
+        $('.upchevron').fadeOut()
+        $('.downchevron').fadeIn()
+        $('footer > *').toggleClass('footerhide')
+        $('.musicfull').toggleClass('musicfullhide')
+    })
+
+    $('.downchevron').click(() => {
+        ($('.musicfull').hasClass('delaytransition') ? $('.musicfull').toggleClass('delaytransition') : "")
+        $('footer > *').toggleClass('delaytransition')
+        $('.downchevron').fadeOut()
+        $('.upchevron').fadeIn()
+        $('footer > *').toggleClass('footerhide')
+        $('.musicfull').toggleClass('musicfullhide')
+    })
+
+    function play(pause) {
+        if (pause == true) {
+            $('.play').removeClass('fa-play')
+            $('.play').addClass('fa-pause')
+            $('#music')[0].play()
+            paused = false
+        } else {
+            $('.play').removeClass('fa-pause')
+            $('.play').addClass('fa-play')
+            $('#music')[0].pause()
+            paused = true
+        }
+    }
     
     function setmusic() {
-        songID = $(this).attr('id')
+        var songID = $(this).attr('id')
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
             method: "GET",
@@ -69,15 +96,49 @@ $(document).ready(() => {
     
             success: function(data) {
                 for (item in data.songs) {
-                    if (data.songs[item].id == songID) {
-                        $('#musictitle').html(data.songs[item].name)
-                        $('#artistname span').html(data.songs[item].artist)
-                        $('#music').attr('src', data.songs[item].song)
-                        $('#songimg').attr('src', data.songs[item].image)
-                        console.log(data.songs[item]);
+                    var currentsong = data.songs[item]
+                    if (currentsong.id == songID) {
+                        $('.musictitle').html(currentsong.name)
+                        $('.artistname span').html(currentsong.artist)
+                        $('#music').attr('src', currentsong.song)
+                        $('#music').attr('data-id', currentsong.id)
+                        $('#songimg').attr('src', currentsong.image)
+                        paused = true
+                        play(paused)
                     }
                 }
             }
+        })
+    }
+
+    function changetrack() {
+        var songID = $('#music').data('id')
+        var btnValue  = $(this).data('value')
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: function() {
+                alert('Le chargement de la liste des musiques a échoué')
+            },
+
+            success: function(data) {
+                for (item in data.songs) {
+                    var currentsong = data.songs[item]
+                    if (currentsong.id == (songID + btnValue)) {
+                        $('.musictitle').html(currentsong.name)
+                        $('.artistname span').html(currentsong.artist)
+                        $('#music').attr('src', currentsong.song)
+                        $('#music').data('id', currentsong.id)
+                        $('#songimg').attr('src', currentsong.image)
+                        paused = true
+                        play(paused)
+                    }
+                }
+            }
+
+
         })
     }
 

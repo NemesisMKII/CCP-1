@@ -26,24 +26,43 @@ main li {
     font-size: 1.7em;
 }
 
-footer {
-    height: 13%;
+.upchevron {
+    z-index: 100;
+    font-size: 1.5rem;
+    margin-right: 1%;
 }
 
-#imgalign {
+.footerwrapper {
+    z-index: 11;
+}
+
+footer {
+    height: 13%;
+    overflow: hidden;
+}
+
+footer > * {
+    transition: transform 1s;
+}
+
+.footerhide {
+    transform: translateY(-120%);
+}
+
+footer .imgalign {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
 }
 
-footer img {
+footer .songimg {
     max-width: 20%;
     height: 80%;
     vertical-align: middle;
     margin-left: 5px;
 }
 
-#textcontainer {
+footer .textcontainer {
     width: 150px;
     position: absolute;
     top: 0;
@@ -53,15 +72,15 @@ footer img {
     margin-left: -75px;
 }
 
-#musictitle {
+footer .musictitle {
     font-size: 0.85em;
 }
 
-#artistname {
+footer .artistname {
     font-size: 0.7em;
 }
 
-#playbar {
+footer .playbar {
     width: 175px;
     height: 100px;
     left: 50%;
@@ -69,8 +88,77 @@ footer img {
     top: 50%;
 }
 
-#progress {
+footer .progress {
     height: 3px;
+}
+
+/* CSS Agrandissement lecteur */
+.musicfull {
+    height: 74%;
+    width: 100%;
+    background-color: rgb(44, 39, 39);
+    bottom: 13%;
+    top: 13%;
+    z-index: 10;
+    overflow: hidden;
+    transition: transform 1s;
+}
+
+.musicfull .downchevron {
+    z-index: 100;
+    font-size: 1.5rem;
+    margin-right: 1%;
+}
+
+.musicfullhide {
+    transform: translateY(100%);
+}
+
+.musicfull .songimg {
+    max-width: 70%;
+    height: 55%;
+    display: block;
+    margin: 10% auto;
+}
+
+.musicfull .textcontainer {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    text-align: center;
+    line-height: 1.8em;
+    margin-left: -150px;
+    top: 65%;
+}
+
+.musicfull .musictitle {
+    font-size: 1.7em;
+}
+
+.musicfull .artistname {
+    font-size: 1.3em;
+}
+
+.musicfull .playbar {
+    width: 220px;
+    height: 100px;
+    left: 50%;
+    margin-left: -110px;
+    top: 85%;
+}
+
+.musicfull .progress {
+    height: 10px;
+}
+
+.musicfull i {
+    font-size: 1.4em;
+    margin-top: 10px;
+}
+
+.delaytransition {
+    transition-delay: 0.3s;
 }
 
 /* footer img {
@@ -120,14 +208,6 @@ footer img {
 
 i {
     font-size: 1rem;
-}
-
-.musicshower {
-    height: 74%;
-    width: 100%;
-    background-color: rgb(44, 39, 39);
-    bottom: 12.8%;
-    overflow: hidden;
 }
 
 .musicshower img {
