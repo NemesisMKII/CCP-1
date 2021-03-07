@@ -1,4 +1,6 @@
 $(document).ready(() => {
+    var musiccurrentlength = 0
+    var ischronoon = false
     paused = true
     $('body').hide()
 
@@ -70,12 +72,26 @@ $(document).ready(() => {
     })
 
     function play(pause) {
+        if (ischronoon) {
+            clearInterval(chrono)
+        }
         if (pause == true) {
+            chrono = setInterval(() => {
+                musiccurrentlength++
+                $('.currentlength').empty()
+                $('.currentlength').append(getmusiclength(musiccurrentlength))
+                $('.progress div').css({
+                    width: (musiccurrentlength / Math.round($('#music')[0].duration)*100)
+                })
+            }, 1000)
+            ischronoon = true
             $('.play').removeClass('fa-play')
             $('.play').addClass('fa-pause')
             $('#music')[0].play()
             paused = false
         } else {
+            clearInterval(chrono)
+            ischronoon = false
             $('.play').removeClass('fa-pause')
             $('.play').addClass('fa-play')
             $('#music')[0].pause()
@@ -84,6 +100,7 @@ $(document).ready(() => {
     }
     
     function setmusic() {
+        musiccurrentlength = 0
         var songID = $(this).attr('id')
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
@@ -95,6 +112,7 @@ $(document).ready(() => {
             },
     
             success: function(data) {
+                musiccurrentlength = 0
                 for (item in data.songs) {
                     var currentsong = data.songs[item]
                     if (currentsong.id == songID) {
@@ -102,10 +120,17 @@ $(document).ready(() => {
                         $('.artistname span').html(currentsong.artist)
                         $('#music').attr('src', currentsong.song)
                         $('#music').attr('data-id', currentsong.id)
-                        $('#songimg').attr('src', currentsong.image)
-                        /*
+                        $('.songimg').attr('src', currentsong.image)
                         $('#music')[0].onloadedmetadata = () => {
-                        } */
+                            var musictotallength = getmusiclength($('#music')[0].duration)
+                            $('.currentlength').empty()
+                            $('.currentlength').append(getmusiclength(musiccurrentlength))
+                            $('.totalength').empty()
+                            $('.totalength').append(musictotallength)
+                            $('.progress div').css({
+                                width: 0
+                            })
+                        }
                         paused = true
                         play(paused)
                     }
@@ -115,6 +140,7 @@ $(document).ready(() => {
     }
 
     function changetrack() {
+        musiccurrentlength = 0
         var songID = $('#music').data('id')
         var btnValue  = $(this).data('value')
         $.ajax({
@@ -130,11 +156,21 @@ $(document).ready(() => {
                 for (item in data.songs) {
                     var currentsong = data.songs[item]
                     if (currentsong.id == (songID + btnValue)) {
+                        $('#music').attr('src', currentsong.song)
                         $('.musictitle').html(currentsong.name)
                         $('.artistname span').html(currentsong.artist)
-                        $('#music').attr('src', currentsong.song)
                         $('#music').data('id', currentsong.id)
-                        $('#songimg').attr('src', currentsong.image)
+                        $('.songimg').attr('src', currentsong.image)
+                        $('#music')[0].onloadedmetadata = () => {
+                            var musictotallength = getmusiclength($('#music')[0].duration)
+                            $('.totalength').empty()
+                            $('.totalength').append(musictotallength)
+                            $('.currentlength').empty()
+                            $('.currentlength').append(getmusiclength(musiccurrentlength))
+                            $('.progress div').css({
+                                width: 0
+                            })
+                        }
                         paused = true
                         play(paused)
                     }
@@ -143,6 +179,13 @@ $(document).ready(() => {
 
 
         })
+    }
+
+    function getmusiclength(duration, counter = null) {
+        var secs = Math.round(duration)
+        var mins = parseInt(secs / 60)
+        secs = secs % 60
+        return mins + ':' + (secs < 10 ? "0" + secs : secs)
     }
 
     function register(e) {

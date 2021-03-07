@@ -92,6 +92,11 @@ footer .progress {
     height: 3px;
 }
 
+.progress div {
+    background-color: red;
+    transition: width 0s;
+}
+
 /* CSS Agrandissement lecteur */
 .musicfull {
     height: 74%;
@@ -145,7 +150,7 @@ footer .progress {
     height: 100px;
     left: 50%;
     margin-left: -110px;
-    top: 85%;
+    top: 80%;
 }
 
 .musicfull .progress {
@@ -153,8 +158,12 @@ footer .progress {
 }
 
 .musicfull i {
-    font-size: 1.4em;
+    font-size: 1.8em;
     margin-top: 10px;
+}
+
+.musicfull i.play {
+    font-size: 3em;
 }
 
 .delaytransition {
