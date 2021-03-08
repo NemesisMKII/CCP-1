@@ -4,6 +4,33 @@ $(document).ready(() => {
     paused = true
     $('body').hide()
 
+    $('.soundprogress').on('input',function() {
+        $('#music')[0].volume = $(this).val() / 100
+        $('i.fa').removeClass('fa-volume')
+    })
+
+    switch($('.soundprogress').val()) {
+        case ($('.soundprogress').val() <= 25): 
+            $('i.fa').removeClass('fa-volume')
+            $('i.fa').addClass('fa-volume-down')
+    }
+
+    /* $('.soundprogress').click(function (event) {
+        var posX = event.pageX - $(this).offset().left
+        $(this).children(1).css({
+            width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
+        })
+        $('#music')[0].volume = (posX / $(this).css('width').split('px')[0])
+    }) */
+
+    $('.progress').click(function(event) {
+        var posX = event.pageX - $(this).offset().left
+        $(this).children(1).css({
+            width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
+        })
+        $('#music')[0].currentTime = $('#music')[0].duration * (posX / $(this).css('width').split('px')[0])
+    })
+
     if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
         $('#css').after(`
         <!-- CSS style for mobile -->
@@ -50,8 +77,13 @@ $(document).ready(() => {
         play(paused)
     })
 
-    $('.forwards').click(changetrack)
-    $('.backwards').click(changetrack)
+    $('.forwards').click(() => {
+        changetrack(1)
+    })
+
+    $('.backwards').click(() => {
+        changetrack(-1)
+    })
 
     $('.upchevron').click(() => {
         ($('footer > *').hasClass('delaytransition') ? $('footer > *').toggleClass('delaytransition') : "")
@@ -77,12 +109,15 @@ $(document).ready(() => {
         }
         if (pause == true) {
             chrono = setInterval(() => {
-                musiccurrentlength++
+                musiccurrentlength = $('#music')[0].currentTime
                 $('.currentlength').empty()
                 $('.currentlength').append(getmusiclength(musiccurrentlength))
                 $('.progress div').css({
-                    width: (musiccurrentlength / Math.round($('#music')[0].duration)*100)
+                    width: (musiccurrentlength / Math.round($('#music')[0].duration)*100) + "%"
                 })
+                if (musiccurrentlength == $('#music')[0].duration) {
+                    setTimeout(() => {changetrack(1)}, 500)
+                }
             }, 1000)
             ischronoon = true
             $('.play').removeClass('fa-play')
@@ -139,10 +174,9 @@ $(document).ready(() => {
         })
     }
 
-    function changetrack() {
+    function changetrack(counter) {
         musiccurrentlength = 0
         var songID = $('#music').data('id')
-        var btnValue  = $(this).data('value')
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
             method: "GET",
@@ -155,7 +189,7 @@ $(document).ready(() => {
             success: function(data) {
                 for (item in data.songs) {
                     var currentsong = data.songs[item]
-                    if (currentsong.id == (songID + btnValue)) {
+                    if (currentsong.id == (songID + counter)) {
                         $('#music').attr('src', currentsong.song)
                         $('.musictitle').html(currentsong.name)
                         $('.artistname span').html(currentsong.artist)

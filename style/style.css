@@ -36,7 +36,6 @@ aside {
 }
 
 main {
-    width: 83%;
     height: 100%;
     margin-left: 17%;
     overflow-y: scroll;
@@ -53,38 +52,9 @@ footer {
 #progress {
     height: 3px;
     background-color: grey;
-    border-radius: 10px;
 }
 
 #progress div {
     background-color: white;
-    width: 75%;
     height: 100%;
-    border-radius: 10px;
 }
-
-/*
-#playbar {
-    margin-left: -125px;
-    left: 50%;
-}
-
-#soundprogress {
-    width: 100px;
-    height: 3px;
-    background-color: grey;
-    border-radius: 10px;
-}
-
-#soundprogress div {
-    background-color: white;
-    width: 75%;
-    height: 100%;
-    border-radius: 10px;
-}
-
-
-i {
-    cursor: pointer;
-}
-*/
