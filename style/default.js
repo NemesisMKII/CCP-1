@@ -45,7 +45,7 @@ $(document).ready(() => {
     //Get user from sessionStorage if someone is already connected, or create it and store it in sessionStorage
     //This is in case the user doesn't check "stay connected"
     if (!sessionStorage.getItem('user')) {
-        var user = {}
+        var user;
         sessionStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(sessionStorage.getItem('user'))
@@ -144,9 +144,24 @@ $(document).ready(() => {
         changetrack(-1)
     })
 
+    $('.musicfull i.fa-heart').click(function() {
+        if ($(this).hasClass('far')) {
+            user.favorites.push($('#music').data('id'))
+            localStorage.setItem('user', JSON.stringify(user))
+            $(this).removeClass('far')
+            $(this).addClass('fas')
+            $('.textbox h4').html('Chanson ajoutée aux favoris !')
+            $('.textbox').toggleClass('textboxshow')
+            setTimeout(() => {
+                $('.textbox').toggleClass('textboxshow')
+            }, 2500)
+        } else {
+            $(this).removeClass('fas')
+            $(this).addClass('far')
+        }
+    })
+
     $('.footerwrapper footer').click(function(e) {
-        console.log(e.target);
-        console.log(this);
         if (e.target !== this) {
             return
         } else {
@@ -319,10 +334,12 @@ $(document).ready(() => {
             alert('Identifiants/mot de passe incorrects.')
         } else {
             for (users in userlist) {
-                user = userlist[users]
-                if ($('#login').val() == user.pseudo || $('#login').val() == user.mail) {
-                    if ($('#password').val() == user.MDP) {
+                currentuser = userlist[users]
+                if ($('#login').val() == currentuser.pseudo || $('#login').val() == currentuser.mail) {
+                    if ($('#password').val() == currentuser.MDP) {
                         alert('Connecté !')
+                        user = currentuser
+                        localStorage.setItem('user', JSON.stringify(currentuser))
                         if ($('#staytune').is(':checked')) {
                             alert('check !')
                         }

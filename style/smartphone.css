@@ -155,6 +155,20 @@ footer .progress {
     transition: width 0s;
 }
 
+.textbox {
+    height: 13%;
+    width: 100%;
+    position: absolute;
+    bottom: -13%;
+    border: 1px solid black;
+    background: white;
+    z-index: 99;
+    transition: transform 0.5s;
+}
+
+.textboxshow {
+    transform: translateY(-100%);
+}
 /* CSS Agrandissement lecteur */
 .musicfull {
     height: 74%;
@@ -222,6 +236,10 @@ footer .progress {
 
 .musicfull i.play {
     font-size: 3em;
+}
+
+.musicfull i.fa-heart {
+    font-size: 1.3em;
 }
 
 .delaytransition {
