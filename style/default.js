@@ -1,27 +1,124 @@
+var logregTEMPLATE = `
+<h1 class="text-center">Connexion / Inscription</h1>
+<form class="text-center w-50 mx-auto mt-5" id="connexion">
+    <header class="w-100 h-50 d-flex flex-column">
+        <input type="text" placeholder="mail/pseudo" class="w-100 mt-3" id="login">
+        <input type="text" placeholder="password" class="w-100 mt-3" id="password">
+        <span class="d-inline-flex mt-3 mx-auto align-items-center "><input type="checkbox" class="mx-2" id="staytune"><p class="m-0">Rester connecté </p></span>
+        <button class="btn btn-success d-block mx-auto mt-3" id="btnConnexion">Connexion</button>
+        <p class="mt-3">Pas encore inscrit ? <a href="#" class="switch">Cliquez-ici</a></p>
+    </header>
+</form>
+<form class="text-center w-50 mx-auto mt-5" id="inscription">
+    <header class="w-100 h-50 d-flex flex-column">
+        <input type="text" placeholder="mail" class="w-100 mt-3" id="usermail">
+        <input type="text" placeholder="pseudo" class="w-100 mt-3" id="userpseudo">
+        <input type="text" placeholder="mdp" class="w-100 mt-3" id="usermdp">
+        <button class="btn btn-success d-block mx-auto mt-3" id="btnInscription">inscription</button>
+        <p class="mt-3">Déjà inscrit ? <a href="#" class="switch">Cliquez-ici</a></p>
+    </header>
+</form>
+`
+
 $(document).ready(() => {
+    $('body').hide()
+
+    //Detects if user is on a device  other than pc, and if so, applies mobile css on it
+    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
+        $('#css').after(`
+        <!-- CSS style for mobile -->
+        <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
+        `)
+        $('body').show()
+    } else {
+        $('body').show()
+    }
+
+    // Get the user list if there is any, or create it and store it in localstorage
+    if (!localStorage.getItem('userlist')) {
+        var userlist = []
+        localStorage.setItem('userlist', JSON.stringify(userlist))
+    } else {
+        var userlist = JSON.parse(localStorage.getItem('userlist'))
+    }
+
+    //Get user from sessionStorage if someone is already connected, or create it and store it in sessionStorage
+    //This is in case the user doesn't check "stay connected"
+    if (!sessionStorage.getItem('user')) {
+        var user = {}
+        sessionStorage.setItem('user', JSON.stringify(user))
+    } else {
+        var user = JSON.parse(sessionStorage.getItem('user'))
+    }
+
+    //Same as above, but is in case the user check "stay connected"
+    if (!localStorage.getItem('user')) {
+        var user;
+        localStorage.setItem('user', JSON.stringify(user))
+    } else {
+        var user = JSON.parse(localStorage.getItem('user'))
+    }
+
+    $('footer > *').toggleClass('delaytransition')
     var musiccurrentlength = 0
     var ischronoon = false
     paused = true
-    $('body').hide()
+
+    $('.drawcontainer ul li').click(function() {
+        $('main').empty()
+        $('aside').toggleClass('hide')
+        switch($(this).attr('id')) {
+            case 'home':
+                $('main').append(`
+                <ul id="songlist"></ul>
+                `)
+                $.ajax({
+                    url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                    method: "GET",
+                    dataType: "json",
+            
+                    error: function() {
+                        alert('le chargement de la liste des musiques a échoué')
+                    },
+            
+                    success: function(data) {
+                        for (item in data.songs) {
+                            
+                            $('#songlist').append(`
+                            <li id="${data.songs[item].id}">${data.songs[item].name}</li>
+                            `)
+                            
+                        }
+                        $('#songlist li').click(setmusic)
+                    }
+                })
+                break
+            case 'connect':
+                $('main').append(logregTEMPLATE)
+                $('#inscription').toggle()
+                $('.switch').click(logregswitch)
+                $('#btnInscription').click(register)
+                $('#btnConnexion').click(login)
+                
+            default:
+                break
+        }
+    })
+
+    $('.menudrawer').click(() => {
+        $('aside').toggleClass('hide')
+    })
 
     $('.soundprogress').on('input',function() {
         $('#music')[0].volume = $(this).val() / 100
         $('i.fa').removeClass('fa-volume')
     })
 
-    switch($('.soundprogress').val()) {
+    /* switch($('.soundprogress').val()) {
         case ($('.soundprogress').val() <= 25): 
             $('i.fa').removeClass('fa-volume')
             $('i.fa').addClass('fa-volume-down')
-    }
-
-    /* $('.soundprogress').click(function (event) {
-        var posX = event.pageX - $(this).offset().left
-        $(this).children(1).css({
-            width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
-        })
-        $('#music')[0].volume = (posX / $(this).css('width').split('px')[0])
-    }) */
+    } */
 
     $('.progress').click(function(event) {
         var posX = event.pageX - $(this).offset().left
@@ -30,44 +127,6 @@ $(document).ready(() => {
         })
         $('#music')[0].currentTime = $('#music')[0].duration * (posX / $(this).css('width').split('px')[0])
     })
-
-    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
-        $('#css').after(`
-        <!-- CSS style for mobile -->
-        <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
-        `)
-        $('body').show()
-    }
-
-    $.ajax({
-        url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-        method: "GET",
-        dataType: "json",
-
-        error: function() {
-            alert('le chargement de la liste des musiques a échoué')
-        },
-
-        success: function(data) {
-            for (item in data.songs) {
-                $('#songlist').append(`
-                <li id="${data.songs[item].id}">${data.songs[item].name}</li>
-                `)
-            }
-            $('#songlist li').click(setmusic)
-        }
-    })
-
-    if (!localStorage.getItem('userlist')) {
-        var userlist = []
-        localStorage.setItem('userlist', JSON.stringify(userlist))
-    } else {
-        var userlist = JSON.parse(localStorage.getItem('userlist'))
-    }
-
-    $('#btnInscription').click(register)
-
-    $('#btnConnexion').click(login)
 
     $('.muteBtn').click(() => {
         alert('click')
@@ -85,22 +144,17 @@ $(document).ready(() => {
         changetrack(-1)
     })
 
-    $('.upchevron').click(() => {
-        ($('footer > *').hasClass('delaytransition') ? $('footer > *').toggleClass('delaytransition') : "")
-        $('.musicfull').toggleClass('delaytransition')
-        $('.upchevron').fadeOut()
-        $('.downchevron').fadeIn()
-        $('footer > *').toggleClass('footerhide')
-        $('.musicfull').toggleClass('musicfullhide')
-    })
-
-    $('.downchevron').click(() => {
-        ($('.musicfull').hasClass('delaytransition') ? $('.musicfull').toggleClass('delaytransition') : "")
-        $('footer > *').toggleClass('delaytransition')
-        $('.downchevron').fadeOut()
-        $('.upchevron').fadeIn()
-        $('footer > *').toggleClass('footerhide')
-        $('.musicfull').toggleClass('musicfullhide')
+    $('.footerwrapper footer').click(function(e) {
+        console.log(e.target);
+        console.log(this);
+        if (e.target !== this) {
+            return
+        } else {
+            $('footer > *').toggleClass('delaytransition')
+            $('.musicfull').toggleClass('delaytransition')
+            $('footer > *').toggleClass('footerhide')
+            $('.musicfull').toggleClass('musicfullhide')
+        }
     })
 
     function play(pause) {
@@ -221,6 +275,11 @@ $(document).ready(() => {
         secs = secs % 60
         return mins + ':' + (secs < 10 ? "0" + secs : secs)
     }
+    
+    function logregswitch() {
+        $('#connexion').toggle()
+        $('#inscription').toggle()
+    }
 
     function register(e) {
         e.preventDefault()
@@ -240,7 +299,7 @@ $(document).ready(() => {
                         last_name: 0,
                         MDP: $('#usermdp').val(),
                         favorites: [],
-                        user_ID: 0
+                        user_ID: uuidv4()
                     }
 
                     userlist.push(user)
@@ -275,4 +334,11 @@ $(document).ready(() => {
             }
         }
     }
+
+    function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
 })
