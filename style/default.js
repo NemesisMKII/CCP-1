@@ -64,6 +64,25 @@ $(document).ready(() => {
     var ischronoon = false
     paused = true
 
+    $('.searchshow').click(() => {
+        $('#searchinput').focus()
+    })
+
+    $('#searchinput').focus(() => {
+        var search = ""
+        $('#searchinput').keydown((e) => {
+            if (e.keyCode == 8) {
+            } else {
+                if (e.keyCode != 13 && e.keyCode != 16 && e.keyCode != 20 && e.keyCode != 8) {
+                    let searchregex = new RegExp(search, "g")
+                    search += e.key
+                    console.log(search);
+                }
+            }
+            
+        })
+    })
+
     $('.drawcontainer ul li').click(function() {
         $('main').empty()
         $('aside').toggleClass('hide')

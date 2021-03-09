@@ -22,6 +22,14 @@ footer div.volumediv {
     transform: translateY(-50%);
 }
 
+.searchshow {
+    display: inline-block !important;
+    text-align: center;
+    font-size: 2.5em;
+    vertical-align: middle;
+    right: 5%;
+    transform: translateY(-50%);
+}
 aside {
     position: absolute;
     width: 75%;
@@ -73,6 +81,7 @@ aside {
 }
 
 main {
+    position: relative;
     width: 100%;
     margin: 0;
     height: 74%;
@@ -85,10 +94,18 @@ main li {
     font-size: 1.7em;
 }
 
-.upchevron {
-    z-index: 100;
-    font-size: 1.5rem;
-    margin-right: 1%;
+.searchbar {
+    height: 50px;
+    width: 100%;
+    background: red;
+    position: absolute;
+}
+
+#searchinput {
+    width: 93%;
+    height: 45px;
+    margin-top: 2.5px;
+    margin-left: 1%;
 }
 
 .footerwrapper {
@@ -169,6 +186,7 @@ footer .progress {
 .textboxshow {
     transform: translateY(-100%);
 }
+
 /* CSS Agrandissement lecteur */
 .musicfull {
     height: 74%;
@@ -179,12 +197,6 @@ footer .progress {
     z-index: 10;
     overflow: hidden;
     transition: transform 1s;
-}
-
-.musicfull .downchevron {
-    z-index: 100;
-    font-size: 1.5rem;
-    margin-right: 1%;
 }
 
 .musicfullhide {
