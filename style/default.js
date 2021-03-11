@@ -93,6 +93,15 @@ $(document).ready(() => {
             $('.searchwrapper').toggleClass('heighttoggle')
             $('#searchinput').focus(inputfocus)
         }
+        $('.searchwrapper').click(function(e) {
+            $('.searchwrapper').unbind('click')
+            if (e.target !== this) {
+                return
+            } else {
+                $('.searchbar').toggleClass('heighttoggle')
+                $('.searchwrapper').toggleClass('heighttoggle')
+            } 
+        })
     })
     
     function inputfocus() {
@@ -107,7 +116,7 @@ $(document).ready(() => {
 
             success: function(data) {
                 var songlist = data.songs
-                $('#searchinput').keydown(() => {
+                $('#searchinput').keyup(() => {
                     searchresults($('#searchinput').val().toLowerCase(), songlist) 
                 })
                 
@@ -134,11 +143,9 @@ $(document).ready(() => {
             
                     success: function(data) {
                         for (item in data.songs) {
-                            
                             $('#songlist').append(`
                             <li id="${data.songs[item].id}">${data.songs[item].name}</li>
                             `)
-                            
                         }
                         $('#songlist li').click(setmusic)
                     }
@@ -158,6 +165,14 @@ $(document).ready(() => {
 
     $('.menudrawer').click(() => {
         $('aside').toggleClass('hide')
+    })
+
+    $('aside').click(function(e) {
+        if (e.target !== this) {
+            return
+        } else {
+            $('aside').toggleClass('hide')
+        } 
     })
 
     $('.soundprogress').on('input',function() {
@@ -254,8 +269,10 @@ $(document).ready(() => {
             $('#searchresult').append(`
             <li id="${currentsongitem.id}">
             <img src='${currentsongitem.image}' alt=''/>
-            <p>${currentsongitem.name}</p>
-            <p>${currentsongitem.artist}</p>
+            <div>
+                <p>${currentsongitem.name}</p>
+                <p>${currentsongitem.artist}</p>
+            </div>
             </li>
             `)
         }
