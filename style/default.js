@@ -19,6 +19,14 @@ var logregTEMPLATE = `
     </header>
 </form>
 `
+var playlistsTEMPLATE = `
+<div class="d-flex justify-content-between">
+    <h1 class="m-2">Playlists</h1>
+    <p class="float-end" id="addplaylistBtn">Ajouter une playlist ...</p>
+</div>
+<div class="playlistscontainer mt-3">
+</div>
+`
 
 var searchTEMPLATE = `
 <div class="searchbar heighttoggle">
@@ -40,6 +48,22 @@ $(document).ready(() => {
     viewport.setAttribute("content", "height=" + viewheight + "px, width=" + viewwidth + "px, initial-scale=1.0");
     
     $('body').hide()
+
+    $('.confirm').click(() => {
+        if ($('#playlistname').val() == "") {
+            alert('Vide !')
+        } else {
+            playlist = {
+                playlist_name: $('#playlistname').val(),
+                user_ID: user.user_ID,
+                playlist_ID: uuidv4(),
+                content: []
+            }
+
+            playlists.push(playlist)
+            localStorage.setItem('playlists', JSON.stringify(playlists))
+        }
+    })
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
     if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
@@ -75,6 +99,13 @@ $(document).ready(() => {
         localStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(localStorage.getItem('user'))
+    }
+
+    if (!localStorage.getItem('playlists')) {
+        var playlists = []
+        localStorage.setItem('playlists', JSON.stringify(playlists))
+    } else {
+        var playlists = JSON.parse(localStorage.getItem('playlists'))
     }
 
     $('footer > *').toggleClass('delaytransition')
@@ -160,11 +191,31 @@ $(document).ready(() => {
                 $('.switch').click(logregswitch)
                 $('#btnInscription').click(register)
                 $('#btnConnexion').click(login)
-                
+            case 'playlists':
+                $('main').append(playlistsTEMPLATE)
+                if (playlists.length > 0) {
+                    for (items in playlists) {
+                        currentplaylist = playlists[items]
+                        $('.playlistscontainer').append(`
+                            <div class="playlistObject ms-3" data-id="${currentplaylist.playlist_ID}">
+                                <div></div>
+                                <p class="text-center">${currentplaylist.playlist_name}</p>
+                            </div>
+                        `)
+                    }
+                }
+                $('#addplaylistBtn').click(() => {
+                    $('#addplaylistModal').modal('show')
+                })
+                $('.playlistObject').click(showplaylist)
             default:
                 break
         }
     })
+
+    function showplaylist() {
+        console.log($(this).data('id'));
+    }
 
     $('.menudrawer').click(() => {
         $('aside').toggleClass('hide')

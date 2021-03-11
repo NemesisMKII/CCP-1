@@ -42,32 +42,9 @@
             </div> 
         </aside>
         <main>
-            
             <ul id="songlist">
             </ul>
         </main>
-        <!-- Module inscription/connexion
-            <h1 class="text-center">Module connexion/inscription</h1>
-        <form class="text-center">
-            <header>
-                <h2>inscription</h2>
-                <input type="text" placeholder="mail" id="usermail">
-                <input type="text" placeholder="pseudo" id="userpseudo">
-                <input type="text" placeholder="mdp" id="usermdp">
-                <button class="btn btn-success d-block mx-auto" id="btnInscription">inscription</button>
-            </header>
-
-        </form>
-        <form class="text-center">
-            <header>
-                <h2>Connexion</h2>
-                <input type="text" placeholder="mail/pseudo" id="login">
-                <input type="text" placeholder="password" id="password">
-                <input type="checkbox" id="staytune"> Rester connecté
-                <button class="btn btn-success d-block mx-auto" id="btnConnexion">Connexion</button>
-            </header>
-        </form>
-        -->
         <!-- Lecteur mp3 -->
         <!-- 
             <div class="footerwrapper position-relative">
@@ -148,6 +125,27 @@
         <div class="textbox">
             <h4 class="text-center"></h4>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addplaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title mx-auto" id="exampleModalLabel">Ajouter une playlist</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center">Nom de la Playlist:</p>
+                        <input type="text" class="w-100" id="playlistname">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary mx-auto confirm">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
         <script src="style/default.js"></script>
     </body>
 </html>
