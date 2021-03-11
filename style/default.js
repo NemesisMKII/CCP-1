@@ -83,6 +83,7 @@ $(document).ready(() => {
     paused = true
 
     $('.searchshow').click(() => {
+        $('#searchinput').val('')
         if ($('.searchbar').length > 0 && $('.searchwrapper').length > 0) {
             $('.searchbar').toggleClass('heighttoggle')
             $('.searchwrapper').toggleClass('heighttoggle')
