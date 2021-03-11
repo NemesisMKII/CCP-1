@@ -100,7 +100,7 @@ $(document).ready(() => {
             } else {
                 $('.searchbar').toggleClass('heighttoggle')
                 $('.searchwrapper').toggleClass('heighttoggle')
-            } 
+            }
         })
     })
     
