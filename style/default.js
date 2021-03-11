@@ -34,6 +34,11 @@ var searchTEMPLATE = `
 `
 
 $(document).ready(() => {
+    let viewheight = $(window).height();
+    let viewwidth = $(window).width();
+    let viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute("content", "height=" + viewheight + "px, width=" + viewwidth + "px, initial-scale=1.0");
+    
     $('body').hide()
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
@@ -91,7 +96,6 @@ $(document).ready(() => {
     })
     
     function inputfocus() {
-        var search = ""
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
             method: "GET",
@@ -103,18 +107,8 @@ $(document).ready(() => {
 
             success: function(data) {
                 var songlist = data.songs
-
-                $('#searchinput').keydown((e) => {
-                    if (e.keyCode == 8) {
-                        search = search.substring(0, search.length - 1)
-                        searchresults(search, songlist)
-                    } else {
-                        if (e.keyCode != 13 && e.keyCode != 16 && e.keyCode != 20 && e.keyCode != 8) {
-                            search += e.key
-                            searchresults(search, songlist)
-                            $('#searchresult li').click(setmusic)
-                        }
-                    }  
+                $('#searchinput').keydown(() => {
+                    searchresults($('#searchinput').val().toLowerCase(), songlist) 
                 })
                 
             },
@@ -256,10 +250,12 @@ $(document).ready(() => {
             }
         }
         for (item in searchresponselist) {
+            currentsongitem = searchresponselist[item]
             $('#searchresult').append(`
-            <li id="${searchresponselist[item].id}">
-            <img src='${searchresponselist[item].image}' alt=''/>
-            <p>${searchresponselist[item].name}</p>
+            <li id="${currentsongitem.id}">
+            <img src='${currentsongitem.image}' alt=''/>
+            <p>${currentsongitem.name}</p>
+            <p>${currentsongitem.artist}</p>
             </li>
             `)
         }
