@@ -2,6 +2,10 @@
     height: 13%;
 }
 
+.heighttoggle {
+    height: 0 !important;
+}
+
 footer div.volumediv {
     display: none !important;
 }       
@@ -30,6 +34,30 @@ footer div.volumediv {
     right: 5%;
     transform: translateY(-50%);
 }
+.searchwrapper {
+    height: 90%;
+    position: relative;
+}
+
+.searchwrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    opacity: 75%;
+}
+
+#searchdiv {
+    position: absolute;
+    width: 100%;
+    max-height: 50%;
+    overflow-y: scroll;
+    background: white;
+}
+
 aside {
     position: absolute;
     width: 75%;
@@ -95,15 +123,15 @@ main li {
 }
 
 .searchbar {
-    height: 50px;
+    height: 10%;
     width: 100%;
     background: red;
-    position: absolute;
+    overflow-y: hidden;
 }
 
 #searchinput {
     width: 93%;
-    height: 45px;
+    height: 90%;
     margin-top: 2.5px;
     margin-left: 1%;
 }

@@ -20,6 +20,19 @@ var logregTEMPLATE = `
 </form>
 `
 
+var searchTEMPLATE = `
+<div class="searchbar heighttoggle">
+    <input type="text" placeholder="Rechercher..." id="searchinput">
+    <i class="far fa-search "></i>
+</div>
+<div class="searchwrapper heighttoggle">
+    <div id="searchdiv">
+        <ul id="searchresult">
+        </ul>
+    </div>
+</div>
+`
+
 $(document).ready(() => {
     $('body').hide()
 
@@ -45,7 +58,7 @@ $(document).ready(() => {
     //Get user from sessionStorage if someone is already connected, or create it and store it in sessionStorage
     //This is in case the user doesn't check "stay connected"
     if (!sessionStorage.getItem('user')) {
-        var user;
+        var user = {}
         sessionStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(sessionStorage.getItem('user'))
@@ -53,7 +66,7 @@ $(document).ready(() => {
 
     //Same as above, but is in case the user check "stay connected"
     if (!localStorage.getItem('user')) {
-        var user;
+        var user = {}
         localStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(localStorage.getItem('user'))
@@ -65,23 +78,49 @@ $(document).ready(() => {
     paused = true
 
     $('.searchshow').click(() => {
-        $('#searchinput').focus()
+        console.log($('main').has('.searchbar'));
+        if ($('.searchbar').length > 0 && $('.searchwrapper').length > 0) {
+            $('.searchbar').toggleClass('heighttoggle')
+            $('.searchwrapper').toggleClass('heighttoggle')
+            $('#searchinput').focus(inputfocus)
+        } else {
+            $('main').prepend(searchTEMPLATE)
+            $('.searchbar').toggleClass('heighttoggle')
+            $('.searchwrapper').toggleClass('heighttoggle')
+            $('#searchinput').focus(inputfocus)
+        }
     })
-
-    $('#searchinput').focus(() => {
+    
+    function inputfocus() {
         var search = ""
-        $('#searchinput').keydown((e) => {
-            if (e.keyCode == 8) {
-            } else {
-                if (e.keyCode != 13 && e.keyCode != 16 && e.keyCode != 20 && e.keyCode != 8) {
-                    let searchregex = new RegExp(search, "g")
-                    search += e.key
-                    console.log(search);
-                }
-            }
-            
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Le chargement de la liste des musiques a échoué.')
+            },
+
+            success: function(data) {
+                var songlist = data.songs
+
+                $('#searchinput').keydown((e) => {
+                    if (e.keyCode == 8) {
+                        search = search.substring(0, search.length - 1)
+                        searchresults(search, songlist)
+                    } else {
+                        if (e.keyCode != 13 && e.keyCode != 16 && e.keyCode != 20 && e.keyCode != 8) {
+                            search += e.key
+                            searchresults(search, songlist)
+                            $('#searchresult li').click(setmusic)
+                        }
+                    }  
+                })
+                
+            },
         })
-    })
+    }
 
     $('.drawcontainer ul li').click(function() {
         $('main').empty()
@@ -190,6 +229,39 @@ $(document).ready(() => {
             $('.musicfull').toggleClass('musicfullhide')
         }
     })
+
+    function searchresults(searchitem, datasongs) {
+        //Function used in Ajax Request
+        $('#searchresult').empty()
+        var searchresponselist = []
+        var searchregex = "(?:"
+        for (letters in searchitem) {
+            switch(searchitem[letters]) {
+                case '(':
+                    searchregex += '\\('
+                    break
+                case ')':
+                    searchregex += '\\)'
+                    break
+                default:
+                    searchregex += searchitem[letters]
+            }
+        }
+        searchregex += "\)"
+        searchmusic = new RegExp(searchregex)
+        for (item in datasongs) {
+            if (searchitem != "") {
+                if (datasongs[item].name.toLowerCase().match(searchmusic) || datasongs[item].artist.toLowerCase().match(searchmusic)) {
+                    searchresponselist.push(datasongs[item])
+                }
+            }
+        }
+        for (item in searchresponselist) {
+            $('#searchresult').append(`
+            <li id="${searchresponselist[item].id}">${searchresponselist[item].name}</li>
+            `)
+        }
+    }
 
     function play(pause) {
         if (ischronoon) {
@@ -363,7 +435,8 @@ $(document).ready(() => {
                             alert('check !')
                         }
                     } else {
-                        alert('Identifiants/mot de passe incorrects')}
+                        alert('Identifiants/mot de passe incorrects')
+                    }
                 } else {
                     alert('Identifiants/mot de passe incorrects')
                 }
