@@ -348,13 +348,31 @@ $(document).ready(() => {
         $('#addtoplaylistModal .modal-body button').click(function() {
             var alreadyadded = false
             var id = $(this).parent().data('id')
+            var music = $('#music').data('id')
             console.log($(this).parent().data('id'));
             for (item in playlists) {
-                if (playlists[item].playlist_ID == id) {
-                    if (playlists[item].songs.length == 0) {
-                        playlists[item].songs.push($('#music').data('id'))
-                        localStorage.setItem('playlists', JSON.stringify(playlists))
-                        $(`#addtoplaylistModal div[data-id="${playlists[item].playlist_ID}"] button`).html('Ajoutée !')
+                if (id == playlists[item].playlist_ID) {
+                    var playlist = playlists[item]
+                    console.log(playlist);
+                    if (playlist.songs.length > 0) {
+                        for (song in playlist.songs) {
+                            if (music == playlist.songs[song]) {
+                                alreadyadded = true
+                                console.log(song);
+                                playlist.songs.splice(song, 1)
+                                localStorage.setItem('playlists',JSON.stringify(playlists))
+                                $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajouter')
+                            }
+                        }
+                        if (alreadyadded == false) {
+                            playlist.songs.push(music)
+                            localStorage.setItem('playlists',JSON.stringify(playlists))
+                            $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
+                        }
+                    } else {
+                        playlist.songs.push(music)
+                        localStorage.setItem('playlists',JSON.stringify(playlists))
+                        $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
                     }
                 }
             }
