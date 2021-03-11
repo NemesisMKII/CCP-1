@@ -42,8 +42,6 @@
             </div> 
         </aside>
         <main>
-            <ul id="songlist">
-            </ul>
         </main>
         <!-- Lecteur mp3 -->
         <!-- 
@@ -116,6 +114,7 @@
                     <i class="fas fa-step-forward text-white mx-4 forwards" data-value="1"></i>
                 </div>
             </div>
+            <i class="far fa-headphones text-white position-absolute start-0 bottom-0 m-3 mb-5"></i>
             <i class="far fa-heart text-white position-absolute end-0 bottom-0 m-3 mb-5"></i>
         </div>
         
@@ -137,6 +136,23 @@
                     <div class="modal-body">
                         <p class="text-center">Nom de la Playlist:</p>
                         <input type="text" class="w-100" id="playlistname">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary mx-auto confirm">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for playlists add -->
+        <div class="modal fade" id="addtoplaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title mx-auto" id="exampleModalLabel">Ajouter à la playlist</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-primary mx-auto confirm">Ajouter</button>

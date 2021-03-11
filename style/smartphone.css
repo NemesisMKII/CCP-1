@@ -193,10 +193,22 @@ main li {
     height: 150px;
 }
 
-.playlistObject div {
+.playlistObject img {
     border: 1px solid black;
     width: 100%;
     height: 75%;
+}
+
+#playlistimg {
+    width: 175px;
+    height: 200px;
+    border: 1px solid black;
+}
+
+#playlistinfocontainer {
+    width: 100%;
+    height: 65%;
+    border-bottom: 1px solid black;
 }
 
 /* 

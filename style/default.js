@@ -28,6 +28,15 @@ var playlistsTEMPLATE = `
 </div>
 `
 
+var showplaylistTEMPLATE = `
+<div id="playlistinfocontainer">
+    <h1 class="text-center"></h1>
+    <img src="" alt="" class="d-block mx-auto mt-4" id="playlistimg">
+</div>
+<ul id="songlist">
+</ul>
+`
+
 var searchTEMPLATE = `
 <div class="searchbar heighttoggle">
     <input type="text" placeholder="Rechercher..." id="searchinput">
@@ -57,7 +66,7 @@ $(document).ready(() => {
                 playlist_name: $('#playlistname').val(),
                 user_ID: user.user_ID,
                 playlist_ID: uuidv4(),
-                content: []
+                songs: []
             }
 
             playlists.push(playlist)
@@ -196,9 +205,10 @@ $(document).ready(() => {
                 if (playlists.length > 0) {
                     for (items in playlists) {
                         currentplaylist = playlists[items]
+                        playlist_img = 'https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg'
                         $('.playlistscontainer').append(`
                             <div class="playlistObject ms-3" data-id="${currentplaylist.playlist_ID}">
-                                <div></div>
+                                <img src='${playlist_img}' alt=""/>
                                 <p class="text-center">${currentplaylist.playlist_name}</p>
                             </div>
                         `)
@@ -214,7 +224,60 @@ $(document).ready(() => {
     })
 
     function showplaylist() {
-        console.log($(this).data('id'));
+        var currentplaylistID = $(this).data('id')
+        for (playlist in playlists) {
+            if (currentplaylistID == playlists[playlist].playlist_ID) {
+                var currentplaylist = playlists[playlist]
+            }
+        }
+        $('main').fadeOut()
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Erreur lors du chargement des musiques.')
+            },
+
+            success: function(data) {
+                var songlist = data.songs
+                setTimeout(() => {
+                    $('main').empty()
+                    $('main').append(showplaylistTEMPLATE)
+                    $('#playlistinfocontainer h1').html(currentplaylist.playlist_name)
+                    if (currentplaylist.songs.length == 0) {
+                        $('#playlistimg').attr('src', 'https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg')
+                    } else {
+                        for (songs in songlist) {
+                            if (currentplaylist.songs[0] == songlist[songs].id) {
+                                $('#playlistimg').attr('src', songlist[songs].image)
+                            }
+                        }
+                    }
+                    if (currentplaylist.songs.length == 0) {
+                        $('#playlistinfocontainer').after(`
+                        <h1 class="mt-5 text-center">Cette playlist est vide.</h1>
+                        `)
+                    } else {
+                        for (songID in currentplaylist.songs) {
+                            var currentsongID = currentplaylist.songs[songID]
+                            for(item in songlist) {
+                                var datasong = songlist[item]
+                                if (currentsongID == datasong.id) {
+                                    $('#songlist').append(`
+                                    <li id="${currentsongID}">${datasong.name}</li>
+                                    `)
+                                }
+                            }
+                        }
+                        $('#songlist li').click(setmusic)
+                    }
+                }, 400)
+                setTimeout($('main').fadeIn(), 1000)
+                }
+        })
+        
     }
 
     $('.menudrawer').click(() => {
@@ -262,6 +325,39 @@ $(document).ready(() => {
 
     $('.backwards').click(() => {
         changetrack(-1)
+    })
+
+    $('.musicfull i.fa-headphones').click(function() {
+        var currentsongID = $('#music').data('id')
+        $('#addtoplaylistModal').modal('show')
+        $('#addtoplaylistModal .modal-body').empty()
+        for (item in playlists) {
+            var playlist = playlists[item]
+            $('#addtoplaylistModal .modal-body').append(`
+            <div class="d-flex justify-content-between" data-id="${playlist.playlist_ID}">
+                <p>${playlists[item].playlist_name}</p>
+                <button class="btn btn-success">Ajouter</button>
+            </div>
+            `)
+            for (songs in playlist) {
+                if (currentsongID == playlist[songs]) {
+                    $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
+                }
+            }
+        }
+        $('#addtoplaylistModal .modal-body button').click(function() {
+            var id = $(this).parent().data('id')
+            console.log($(this).parent().data('id'));
+            for (item in playlists) {
+                if (playlists[item].playlist_ID == id) {
+                    if (playlists[item].songs.length == 0) {
+                        playlists[item].songs.push($('#music').data('id'))
+                        localStorage.setItem('playlists', JSON.stringify(playlists))
+                        $(`#addtoplaylistModal div[data-id="${playlists[item].playlist_ID}"] button`).html('Ajoutée !')
+                    }
+                }
+            }
+        })
     })
 
     $('.musicfull i.fa-heart').click(function() {
