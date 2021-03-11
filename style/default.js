@@ -117,7 +117,9 @@ $(document).ready(() => {
             success: function(data) {
                 var songlist = data.songs
                 $('#searchinput').keyup(() => {
-                    searchresults($('#searchinput').val().toLowerCase(), songlist) 
+                    searchresults($('#searchinput').val().toLowerCase(), songlist)
+                    $('#searchresult li').unbind('click')
+                    $('#searchresult li').click(setmusic)
                 })
                 
             },
@@ -276,6 +278,7 @@ $(document).ready(() => {
             </li>
             `)
         }
+        
     }
 
     function play(pause) {
