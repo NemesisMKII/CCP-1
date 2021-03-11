@@ -78,7 +78,6 @@ $(document).ready(() => {
     paused = true
 
     $('.searchshow').click(() => {
-        console.log($('main').has('.searchbar'));
         if ($('.searchbar').length > 0 && $('.searchwrapper').length > 0) {
             $('.searchbar').toggleClass('heighttoggle')
             $('.searchwrapper').toggleClass('heighttoggle')
@@ -257,7 +256,6 @@ $(document).ready(() => {
             }
         }
         for (item in searchresponselist) {
-            console.log(searchresponselist[item].song);
             $('#searchresult').append(`
             <li id="${searchresponselist[item].id}">
             <img src='${searchresponselist[item].image}' alt=''/>
