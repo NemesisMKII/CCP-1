@@ -144,6 +144,7 @@ main li {
 }
 
 #searchresult li img {
+    margin-left: 2%;
     width: 45px;
     height: 45px;
 }
