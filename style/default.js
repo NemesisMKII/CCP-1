@@ -260,6 +260,7 @@ $(document).ready(() => {
             $('#songlist').append(`
             <li id="${searchresponselist[item].id}">${searchresponselist[item].name}</li>
             `)
+            alert(searchresponselist[item].name)
         }
     }
 
