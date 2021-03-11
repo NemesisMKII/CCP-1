@@ -232,7 +232,7 @@ $(document).ready(() => {
 
     function searchresults(searchitem, datasongs) {
         //Function used in Ajax Request
-        $('#searchresult').empty()
+        $('#songlist').empty()
         var searchresponselist = []
         var searchregex = "(?:"
         for (letters in searchitem) {
@@ -257,7 +257,7 @@ $(document).ready(() => {
             }
         }
         for (item in searchresponselist) {
-            $('#searchresult').append(`
+            $('#songlist').append(`
             <li id="${searchresponselist[item].id}">${searchresponselist[item].name}</li>
             `)
         }
