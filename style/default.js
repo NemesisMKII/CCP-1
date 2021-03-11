@@ -20,7 +20,25 @@ var logregTEMPLATE = `
 </form>
 `
 
+var searchTEMPLATE = `
+<div class="searchbar heighttoggle">
+    <input type="text" placeholder="Rechercher..." id="searchinput">
+    <i class="far fa-search "></i>
+</div>
+<div class="searchwrapper heighttoggle">
+    <div id="searchdiv">
+        <ul id="searchresult">
+        </ul>
+    </div>
+</div>
+`
+
 $(document).ready(() => {
+    let viewheight = $(window).height();
+    let viewwidth = $(window).width();
+    let viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute("content", "height=" + viewheight + "px, width=" + viewwidth + "px, initial-scale=1.0");
+    
     $('body').hide()
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
@@ -45,7 +63,7 @@ $(document).ready(() => {
     //Get user from sessionStorage if someone is already connected, or create it and store it in sessionStorage
     //This is in case the user doesn't check "stay connected"
     if (!sessionStorage.getItem('user')) {
-        var user;
+        var user = {}
         sessionStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(sessionStorage.getItem('user'))
@@ -53,7 +71,7 @@ $(document).ready(() => {
 
     //Same as above, but is in case the user check "stay connected"
     if (!localStorage.getItem('user')) {
-        var user;
+        var user = {}
         localStorage.setItem('user', JSON.stringify(user))
     } else {
         var user = JSON.parse(localStorage.getItem('user'))
@@ -63,6 +81,50 @@ $(document).ready(() => {
     var musiccurrentlength = 0
     var ischronoon = false
     paused = true
+
+    $('.searchshow').click(() => {
+        if ($('.searchbar').length > 0 && $('.searchwrapper').length > 0) {
+            $('.searchbar').toggleClass('heighttoggle')
+            $('.searchwrapper').toggleClass('heighttoggle')
+            $('#searchinput').focus(inputfocus)
+        } else {
+            $('main').prepend(searchTEMPLATE)
+            $('.searchbar').toggleClass('heighttoggle')
+            $('.searchwrapper').toggleClass('heighttoggle')
+            $('#searchinput').focus(inputfocus)
+        }
+        $('.searchwrapper').click(function(e) {
+            $('.searchwrapper').unbind('click')
+            if (e.target !== this) {
+                return
+            } else {
+                $('.searchbar').toggleClass('heighttoggle')
+                $('.searchwrapper').toggleClass('heighttoggle')
+            }
+        })
+    })
+    
+    function inputfocus() {
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Le chargement de la liste des musiques a échoué.')
+            },
+
+            success: function(data) {
+                var songlist = data.songs
+                $('#searchinput').keyup(() => {
+                    searchresults($('#searchinput').val().toLowerCase(), songlist)
+                    $('#searchresult li').unbind('click')
+                    $('#searchresult li').click(setmusic)
+                })
+                
+            },
+        })
+    }
 
     $('.drawcontainer ul li').click(function() {
         $('main').empty()
@@ -83,11 +145,9 @@ $(document).ready(() => {
             
                     success: function(data) {
                         for (item in data.songs) {
-                            
                             $('#songlist').append(`
                             <li id="${data.songs[item].id}">${data.songs[item].name}</li>
                             `)
-                            
                         }
                         $('#songlist li').click(setmusic)
                     }
@@ -107,6 +167,14 @@ $(document).ready(() => {
 
     $('.menudrawer').click(() => {
         $('aside').toggleClass('hide')
+    })
+
+    $('aside').click(function(e) {
+        if (e.target !== this) {
+            return
+        } else {
+            $('aside').toggleClass('hide')
+        } 
     })
 
     $('.soundprogress').on('input',function() {
@@ -171,6 +239,47 @@ $(document).ready(() => {
             $('.musicfull').toggleClass('musicfullhide')
         }
     })
+
+    function searchresults(searchitem, datasongs) {
+        //Function used in Ajax Request
+        $('#searchresult').empty()
+        var searchresponselist = []
+        var searchregex = "(?:"
+        for (letters in searchitem) {
+            switch(searchitem[letters]) {
+                case '(':
+                    searchregex += '\\('
+                    break
+                case ')':
+                    searchregex += '\\)'
+                    break
+                default:
+                    searchregex += searchitem[letters]
+            }
+        }
+        searchregex += "\)"
+        searchmusic = new RegExp(searchregex)
+        for (item in datasongs) {
+            if (searchitem != "") {
+                if (datasongs[item].name.toLowerCase().match(searchmusic) || datasongs[item].artist.toLowerCase().match(searchmusic)) {
+                    searchresponselist.push(datasongs[item])
+                }
+            }
+        }
+        for (item in searchresponselist) {
+            currentsongitem = searchresponselist[item]
+            $('#searchresult').append(`
+            <li id="${currentsongitem.id}">
+            <img src='${currentsongitem.image}' alt=''/>
+            <div>
+                <p>${currentsongitem.name}</p>
+                <p>${currentsongitem.artist}</p>
+            </div>
+            </li>
+            `)
+        }
+        
+    }
 
     function play(pause) {
         if (ischronoon) {
@@ -344,7 +453,8 @@ $(document).ready(() => {
                             alert('check !')
                         }
                     } else {
-                        alert('Identifiants/mot de passe incorrects')}
+                        alert('Identifiants/mot de passe incorrects')
+                    }
                 } else {
                     alert('Identifiants/mot de passe incorrects')
                 }
