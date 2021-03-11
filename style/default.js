@@ -346,6 +346,7 @@ $(document).ready(() => {
             }
         }
         $('#addtoplaylistModal .modal-body button').click(function() {
+            var alreadyadded = false
             var id = $(this).parent().data('id')
             console.log($(this).parent().data('id'));
             for (item in playlists) {
