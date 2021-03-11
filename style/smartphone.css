@@ -56,6 +56,7 @@ footer div.volumediv {
     max-height: 50%;
     overflow-y: scroll;
     background: white;
+    display: inline-flex;
 }
 
 aside {
@@ -134,6 +135,17 @@ main li {
     height: 90%;
     margin-top: 2.5px;
     margin-left: 1%;
+}
+
+#searchresult {
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#searchresult li img {
+    width: 45px;
+    height: 45px;
 }
 
 .footerwrapper {
