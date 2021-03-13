@@ -187,7 +187,16 @@ $(document).ready(() => {
                     success: function(data) {
                         for (item in data.songs) {
                             $('#songlist').append(`
-                            <li id="${data.songs[item].id}">${data.songs[item].name}</li>
+                            <li id="${data.songs[item].id}">
+                                <div class="d-flex align-items-center">
+                                    <img src="${data.songs[item].image}" class="musicimg" alt="" />
+                                    <div>
+                                        <p>${data.songs[item].name}</p>
+                                        <p>${data.songs[item].artist}</p>
+                                    </div>
+                                    <i class="far fa-heart ms-auto"></i>
+                                </div>
+                            </li>
                             `)
                         }
                         $('#songlist li').click(setmusic)

@@ -136,6 +136,32 @@ main li {
     font-size: 1.7em;
 }
 
+.musicimg {
+    width: 40px;
+    height: 40px;
+}
+
+.musiceart {
+    display: flex;
+    vertical-align: middle;
+    justify-content: end;
+}
+
+#songlist li {
+    overflow-x:hidden;
+}
+#songlist p {
+    height: 25px;
+    font-size: 0.7em;
+    margin: 0;
+    margin-left: 1%;
+    width: 100%;
+}
+
+#songlist p:nth-child(2) {
+    font-size: 0.5em;
+}
+
 .searchbar {
     height: 10%;
     width: 100%;
