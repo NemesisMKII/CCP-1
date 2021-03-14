@@ -66,6 +66,7 @@ aside {
     z-index: 12;
     transition: transform 0.5s;
     left: -100%;
+    border: transparent;
 }
 
 .hide {
@@ -393,4 +394,8 @@ footer .progress {
 
 .delaytransition {
     transition-delay: 0.3s;
+}
+
+.pcsearchbar, .pcsearchwrapper {
+    display: none;
 }

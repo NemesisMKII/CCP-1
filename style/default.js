@@ -50,6 +50,18 @@ var searchTEMPLATE = `
     </div>
 </div>
 `
+var pcsearchTEMPLATE = `
+<div class="searchbar">
+    <i class="far fa-search"></i>
+    <input type="text" placeholder="Rechercher..." id="searchinput">
+</div>
+<div class="searchwrapper">
+    <div id="searchdiv">
+        <ul id="searchresult">
+        </ul>
+    </div>
+</div>
+`
 
 $(document).ready(() => {
     let viewheight = $(window).height();
@@ -86,7 +98,17 @@ $(document).ready(() => {
         $('body').show()
     } else {
         $('body').show()
+        $('.headerwrapper').append(pcsearchTEMPLATE)
+        $('#searchinput').focus(inputfocus)
+
+        window.onresize = function() {
+            $('.headerwrapper').css({
+                'max-width': $('body').width() - $('aside').width()
+            })
+        }
     }
+
+    
 
     // Get the user list if there is any, or create it and store it in localstorage
     if (!localStorage.getItem('userlist')) {

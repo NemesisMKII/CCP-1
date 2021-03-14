@@ -21,7 +21,8 @@ ul, li {
 
 header {
     min-height: 8%;
-    width: 83%;
+    min-width: 75%;
+    max-width: 90%;
     left: 17%;
     top: 0;
     z-index: 10;
@@ -29,6 +30,7 @@ header {
 
 aside {
     width: 17%;
+    min-width: 250px;
     height: 87%;
     border: 1px solid black;
     position: fixed;
@@ -42,6 +44,16 @@ main {
     margin-left: 17%;
     overflow-y: scroll;
     width: 83%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+main::-webkit-scrollbar {
+    width: 5px;
+}
+
+main::-webkit-scrollbar-thumb {
+    background: rgb(63, 58, 58);
 }
 
 footer {
@@ -76,4 +88,49 @@ footer img {
     float: right;
     border: 1px solid black;
     height: 5%;
+}
+
+.fa-search {
+    font-size: 2rem;
+    margin-left: 1%;
+}
+
+.searchbar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#searchinput {
+    border: transparent;
+    z-index: 10;
+    margin-left: 1%;
+}
+
+#searchinput:focus {
+    outline: none;
+}
+
+#searchresult {
+    background: white;
+}
+
+#searchresult li {
+    height: 60px;
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    border: 1px solid black;
+}
+
+#searchresult li img {
+    width: 55px;
+    height: 55px;
+}
+
+#searchresult li div {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
 }
