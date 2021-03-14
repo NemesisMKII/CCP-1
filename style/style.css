@@ -136,5 +136,7 @@ footer img {
 }
 
 .playbar {
-    
+    top: 15%;
+    width: 300px;
+    transform: translateX(-50%);
 }
