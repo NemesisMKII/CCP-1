@@ -50,6 +50,18 @@ var searchTEMPLATE = `
     </div>
 </div>
 `
+var pcsearchTEMPLATE = `
+<div class="searchbar">
+    <i class="far fa-search"></i>
+    <input type="text" placeholder="Rechercher..." id="searchinput">
+</div>
+<div class="searchwrapper">
+    <div id="searchdiv">
+        <ul id="searchresult">
+        </ul>
+    </div>
+</div>
+`
 
 $(document).ready(() => {
     let viewheight = $(window).height();
@@ -86,7 +98,17 @@ $(document).ready(() => {
         $('body').show()
     } else {
         $('body').show()
+        $('.headerwrapper').append(pcsearchTEMPLATE)
+        $('#searchinput').focus(inputfocus)
+
+        window.onresize = function() {
+            $('.headerwrapper').css({
+                'max-width': $('body').width() - $('aside').width()
+            })
+        }
     }
+
+    
 
     // Get the user list if there is any, or create it and store it in localstorage
     if (!localStorage.getItem('userlist')) {
@@ -106,7 +128,7 @@ $(document).ready(() => {
     }
 
     //Same as above, but is in case the user check "stay connected"
-    if (!localStorage.getItem('user')) {
+    if (!localStorage.getItem('user') || JSON.parse(localStorage.getItem('user') == 'undefined')) {
         var user = {}
         localStorage.setItem('user', JSON.stringify(user))
     } else {
@@ -173,52 +195,96 @@ $(document).ready(() => {
     $('.drawcontainer ul li').click(function() {
         $('main').empty()
         $('aside').toggleClass('hide')
-        switch($(this).attr('id')) {
-            case 'home':
-                $('main').append(`
-                <ul id="songlist"></ul>
-                `)
-                $.ajax({
-                    url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-                    method: "GET",
-                    dataType: "json",
-            
-                    error: function() {
-                        alert('le chargement de la liste des musiques a échoué')
-                    },
-            
-                    success: function(data) {
-                        for (item in data.songs) {
-                            $('#songlist').append(`
-                            <li id="${data.songs[item].id}">
-                                <div class="d-flex align-items-center">
-                                    <img src="${data.songs[item].image}" class="musicimg" alt="" />
-                                    <div>
-                                        <p>${data.songs[item].name}</p>
-                                        <p>${data.songs[item].artist}</p>
-                                    </div>
-                                    <i class="far fa-heart ms-auto"></i>
-                                </div>
-                            </li>
-                            `)
-                        }
-                        $('#songlist li').click(setmusic)
-                        $('#songlist i.fa-heart').click(heartfavorite)
-                    }
-                })
-                break
-            case 'connect':
-                $('main').append(logregTEMPLATE)
-                $('#inscription').toggle()
-                $('.switch').click(logregswitch)
-                $('#btnInscription').click(register)
-                $('#btnConnexion').click(login)
-            case 'playlists':
-                playlistpage()
-                
-            default:
-                break
+        if ($(this).attr('id') != 'connect') {
+            if (jQuery.isEmptyObject(user)) {
+                alert('Connectez-vous pour utiliser cette fonctionnalité')
+            } else {
+                switch($(this).attr('id')) {
+                    case 'home':
+                        $('main').append(`
+                        <ul id="songlist"></ul>
+                        `)
+                        $.ajax({
+                            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                            method: "GET",
+                            dataType: "json",
+                    
+                            error: function() {
+                                alert('le chargement de la liste des musiques a échoué')
+                            },
+                    
+                            success: function(data) {
+                                for (item in data.songs) {
+                                    $('#songlist').append(`
+                                    <li id="${data.songs[item].id}">
+                                        <div class="d-flex align-items-center">
+                                            <img src="${data.songs[item].image}" class="musicimg" alt="" />
+                                            <div>
+                                                <p>${data.songs[item].name}</p>
+                                                <p>${data.songs[item].artist}</p>
+                                            </div>
+                                            <i class="far fa-heart ms-auto"></i>
+                                        </div>
+                                    </li>
+                                    `)
+                                }
+                                checkheartfavorite()
+                                $('#songlist li').click(setmusic)
+                                $('#songlist i.fa-heart').click(heartfavorite)
+                            }
+                        })
+                        break
+                    case 'connect':
+                        $('main').append(logregTEMPLATE)
+                        $('#inscription').toggle()
+                        $('.switch').click(logregswitch)
+                        $('#btnInscription').click(register)
+                        $('#btnConnexion').click(login)
+                        break
+                    case 'playlists':
+                        playlistpage()
+                        break
+                    case 'favorites':
+                        $('main').append(`
+                        <ul id="songlist"></ul>
+                        `)
+                        $.get('https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json', function(data) {
+                            var datasongs = JSON.parse(data).songs
+                            for (songs in user.favorites) {
+                                for (item in datasongs) {
+                                    if (user.favorites[songs] == datasongs[item].id) {
+                                        $('#songlist').append(`
+                                        <li id="${datasongs[item].id}">
+                                            <div class="d-flex align-items-center">
+                                                <img src="${datasongs[item].image}" class="musicimg" alt="" />
+                                                <div>
+                                                    <p>${datasongs[item].name}</p>
+                                                    <p>${datasongs[item].artist}</p>
+                                                </div>
+                                                <i class="far fa-heart ms-auto"></i>
+                                            </div>
+                                        </li>
+                                        `)
+                                    }
+                                }
+                            }
+                            $('#songlist i.fa-heart').click(heartfavorite)
+                            checkheartfavorite()
+                        })
+                        break
+                    default:
+                        break
+                }
+            }
+        } else {
+            $('main').append(logregTEMPLATE)
+            $('#inscription').toggle()
+            $('.switch').click(logregswitch)
+            $('#btnInscription').click(register)
+            $('#btnConnexion').click(login)
         }
+        
+        
     })
 
 
@@ -304,14 +370,14 @@ $(document).ready(() => {
                                 if (currentsongID == datasong.id) {
                                     $('#songlist').append(`
                                     <li id="${data.songs[item].id}">
-                                    <div class="d-flex align-items-center">
-                                        <img src="${data.songs[item].image}" class="musicimg" alt="" />
-                                        <div>
-                                            <p>${data.songs[item].name}</p>
-                                            <p>${data.songs[item].artist}</p>
+                                        <div class="d-flex align-items-center">
+                                            <img src="${data.songs[item].image}" class="musicimg" alt="" />
+                                            <div>
+                                                <p>${data.songs[item].name}</p>
+                                                <p>${data.songs[item].artist}</p>
+                                            </div>
+                                            <i class="far fa-heart ms-auto"></i>
                                         </div>
-                                        <i class="far fa-heart ms-auto"></i>
-                                    </div>
                                     </li>
                                     `)
                                 }
@@ -322,6 +388,7 @@ $(document).ready(() => {
                             $('main').empty()
                             playlistpage()
                         })
+                        checkheartfavorite()
                         $('#songlist i.fa-heart').click(heartfavorite)
                     }
                 }, 400)
@@ -367,74 +434,120 @@ $(document).ready(() => {
     })
 
     $('.play').click(() => {
-        play(paused)
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            play(paused)
+        }
     })
 
     $('.forwards').click(() => {
-        changetrack(1)
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            changetrack(1)
+        }
     })
 
     $('.backwards').click(() => {
-        changetrack(-1)
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            changetrack(-1)
+        }
     })
 
     $('.musicfull i.fa-headphones').click(function() {
-        var currentsongID = $('#music').data('id')
-        $('#addtoplaylistModal').modal('show')
-        $('#addtoplaylistModal .modal-body').empty()
-        for (item in playlists) {
-            var playlist = playlists[item]
-            $('#addtoplaylistModal .modal-body').append(`
-            <div class="d-flex justify-content-between" data-id="${playlist.playlist_ID}">
-                <p>${playlists[item].playlist_name}</p>
-                <button class="btn btn-success">Ajouter</button>
-            </div>
-            `)
-            console.log(playlist);
-            for (songs in playlist.songs) {
-                console.log(playlist.songs[songs]);
-                if (currentsongID == playlist.songs[songs]) {
-                    $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
-                }
-            }
-        }
-        $('#addtoplaylistModal .modal-body button').click(function() {
-            var alreadyadded = false
-            var id = $(this).parent().data('id')
-            var music = $('#music').data('id')
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            var currentsongID = $('#music').data('id')
+            $('#addtoplaylistModal').modal('show')
+            $('#addtoplaylistModal .modal-body').empty()
             for (item in playlists) {
-                if (id == playlists[item].playlist_ID) {
-                    var playlist = playlists[item]
-                    if (playlist.songs.length > 0) {
-                        for (song in playlist.songs) {
-                            if (music == playlist.songs[song]) {
-                                alreadyadded = true
-                                playlist.songs.splice(song, 1)
-                                localStorage.setItem('playlists',JSON.stringify(playlists))
-                                $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajouter')
-                            }
-                        }
-                        if (alreadyadded == false) {
-                            playlist.songs.push(music)
-                            localStorage.setItem('playlists',JSON.stringify(playlists))
-                            $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
-                        }
-                    } else {
-                        playlist.songs.push(music)
-                        localStorage.setItem('playlists',JSON.stringify(playlists))
+                var playlist = playlists[item]
+                $('#addtoplaylistModal .modal-body').append(`
+                <div class="d-flex justify-content-between" data-id="${playlist.playlist_ID}">
+                    <p>${playlists[item].playlist_name}</p>
+                    <button class="btn btn-success">Ajouter</button>
+                </div>
+                `)
+                console.log(playlist);
+                for (songs in playlist.songs) {
+                    console.log(playlist.songs[songs]);
+                    if (currentsongID == playlist.songs[songs]) {
                         $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
                     }
                 }
             }
-        })
-        $('.quit').click(() => {
-            $('#addtoplaylistModal').modal('hide')
-        })
+            $('#addtoplaylistModal .modal-body button').click(function() {
+                var alreadyadded = false
+                var id = $(this).parent().data('id')
+                var music = $('#music').data('id')
+                for (item in playlists) {
+                    if (id == playlists[item].playlist_ID) {
+                        var playlist = playlists[item]
+                        if (playlist.songs.length > 0) {
+                            for (song in playlist.songs) {
+                                if (music == playlist.songs[song]) {
+                                    alreadyadded = true
+                                    playlist.songs.splice(song, 1)
+                                    localStorage.setItem('playlists',JSON.stringify(playlists))
+                                    $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajouter')
+                                }
+                            }
+                            if (alreadyadded == false) {
+                                playlist.songs.push(music)
+                                localStorage.setItem('playlists',JSON.stringify(playlists))
+                                $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
+                            }
+                        } else {
+                            playlist.songs.push(music)
+                            localStorage.setItem('playlists',JSON.stringify(playlists))
+                            $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
+                        }
+                    }
+                }
+            })
+            $('.quit').click(() => {
+                $('#addtoplaylistModal').modal('hide')
+            })
+        }
     })
 
+    function checkheartfavorite() {
+        for (var song = 0; song < $($('#songlist').children()).length; song++) {
+            var currentsong = $($('#songlist').children()[song])
+            var heartitem = $(currentsong.children().children('i.fa-heart')[0])
+            for (item in user.favorites) {
+                if (user.favorites[item] == currentsong.attr('id')) {
+                    heartitem.removeClass('far')
+                    heartitem.addClass('fas')
+                }
+            }
+        }
+    }
+
     function heartfavorite() {
-        console.log($(this));
-        ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas') )
+        var isliked = false
+        var songID = $($(this).parent().parent()[0]).attr('id')
+        console.log(songID);
+        ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas'))
+        if (user.favorites.length == 0) {
+            user.favorites.push(songID)
+        } else {
+            for (songs in user.favorites) {
+                if (songID == user.favorites[songs]) {
+                    isliked = true
+                    user.favorites.splice(songs, 1)
+                }
+            }
+            if (!isliked) {
+                user.favorites.push(songID)
+            }
+        }
+        console.log(user.favorites)
+        localStorage.setItem('user', JSON.stringify(user))
     }
 
     $('.footerwrapper footer').click(function(e) {
@@ -677,5 +790,5 @@ $(document).ready(() => {
           var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
-      }
+    }
 })
