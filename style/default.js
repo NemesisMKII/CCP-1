@@ -106,7 +106,7 @@ $(document).ready(() => {
     }
 
     //Same as above, but is in case the user check "stay connected"
-    if (!localStorage.getItem('user')) {
+    if (!localStorage.getItem('user') || JSON.parse(localStorage.getItem('user') == 'undefined')) {
         var user = {}
         localStorage.setItem('user', JSON.stringify(user))
     } else {
