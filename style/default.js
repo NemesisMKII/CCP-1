@@ -29,6 +29,7 @@ var playlistsTEMPLATE = `
 `
 
 var showplaylistTEMPLATE = `
+<i class="fas fa-arrow-left"></i>
 <div id="playlistinfocontainer">
     <h1 class="text-center"></h1>
     <img src="" alt="" class="d-block mx-auto mt-4" id="playlistimg">
@@ -71,7 +72,9 @@ $(document).ready(() => {
 
             playlists.push(playlist)
             localStorage.setItem('playlists', JSON.stringify(playlists))
+            $('#addplaylistModal').modal('hide')
         }
+
     })
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
@@ -200,6 +203,7 @@ $(document).ready(() => {
                             `)
                         }
                         $('#songlist li').click(setmusic)
+                        $('#songlist i.fa-heart').click(heartfavorite)
                     }
                 })
                 break
@@ -210,11 +214,35 @@ $(document).ready(() => {
                 $('#btnInscription').click(register)
                 $('#btnConnexion').click(login)
             case 'playlists':
+                playlistpage()
+                
+            default:
+                break
+        }
+    })
+
+
+    function playlistpage() {
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Erreur lors du chargement des musiques.')
+            },
+
+            success: function(data) {
                 $('main').append(playlistsTEMPLATE)
                 if (playlists.length > 0) {
                     for (items in playlists) {
                         currentplaylist = playlists[items]
                         playlist_img = 'https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg'
+                        for (songs in data.songs) {
+                            if (data.songs[songs].id == currentplaylist.songs [0]) {
+                                playlist_img = data.songs[songs].image
+                            }
+                        }
                         $('.playlistscontainer').append(`
                             <div class="playlistObject ms-3" data-id="${currentplaylist.playlist_ID}">
                                 <img src='${playlist_img}' alt=""/>
@@ -227,10 +255,10 @@ $(document).ready(() => {
                     $('#addplaylistModal').modal('show')
                 })
                 $('.playlistObject').click(showplaylist)
-            default:
-                break
-        }
-    })
+            }
+        })
+        
+    }
 
     function showplaylist() {
         var currentplaylistID = $(this).data('id')
@@ -275,12 +303,26 @@ $(document).ready(() => {
                                 var datasong = songlist[item]
                                 if (currentsongID == datasong.id) {
                                     $('#songlist').append(`
-                                    <li id="${currentsongID}">${datasong.name}</li>
+                                    <li id="${data.songs[item].id}">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${data.songs[item].image}" class="musicimg" alt="" />
+                                        <div>
+                                            <p>${data.songs[item].name}</p>
+                                            <p>${data.songs[item].artist}</p>
+                                        </div>
+                                        <i class="far fa-heart ms-auto"></i>
+                                    </div>
+                                    </li>
                                     `)
                                 }
                             }
                         }
                         $('#songlist li').click(setmusic)
+                        $('i.fa-arrow-left').click(() => {
+                            $('main').empty()
+                            playlistpage()
+                        })
+                        $('#songlist i.fa-heart').click(heartfavorite)
                     }
                 }, 400)
                 setTimeout($('main').fadeIn(), 1000)
@@ -348,8 +390,10 @@ $(document).ready(() => {
                 <button class="btn btn-success">Ajouter</button>
             </div>
             `)
-            for (songs in playlist) {
-                if (currentsongID == playlist[songs]) {
+            console.log(playlist);
+            for (songs in playlist.songs) {
+                console.log(playlist.songs[songs]);
+                if (currentsongID == playlist.songs[songs]) {
                     $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
                 }
             }
@@ -358,16 +402,13 @@ $(document).ready(() => {
             var alreadyadded = false
             var id = $(this).parent().data('id')
             var music = $('#music').data('id')
-            console.log($(this).parent().data('id'));
             for (item in playlists) {
                 if (id == playlists[item].playlist_ID) {
                     var playlist = playlists[item]
-                    console.log(playlist);
                     if (playlist.songs.length > 0) {
                         for (song in playlist.songs) {
                             if (music == playlist.songs[song]) {
                                 alreadyadded = true
-                                console.log(song);
                                 playlist.songs.splice(song, 1)
                                 localStorage.setItem('playlists',JSON.stringify(playlists))
                                 $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajouter')
@@ -385,6 +426,9 @@ $(document).ready(() => {
                     }
                 }
             }
+        })
+        $('.quit').click(() => {
+            $('#addtoplaylistModal').modal('hide')
         })
     })
 
@@ -404,6 +448,11 @@ $(document).ready(() => {
             $(this).addClass('far')
         }
     })
+
+    function heartfavorite() {
+        console.log($(this));
+        ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas') )
+    }
 
     $('.footerwrapper footer').click(function(e) {
         if (e.target !== this) {
@@ -488,44 +537,46 @@ $(document).ready(() => {
         }
     }
     
-    function setmusic() {
-        musiccurrentlength = 0
-        var songID = $(this).attr('id')
-        $.ajax({
-            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-            method: "GET",
-            dataType: "json",
-    
-            error: function() {
-                alert('le chargement de la liste des musiques a échoué')
-            },
-    
-            success: function(data) {
-                musiccurrentlength = 0
-                for (item in data.songs) {
-                    var currentsong = data.songs[item]
-                    if (currentsong.id == songID) {
-                        $('.musictitle').html(currentsong.name)
-                        $('.artistname span').html(currentsong.artist)
-                        $('#music').attr('src', currentsong.song)
-                        $('#music').attr('data-id', currentsong.id)
-                        $('.songimg').attr('src', currentsong.image)
-                        $('#music')[0].onloadedmetadata = () => {
-                            var musictotallength = getmusiclength($('#music')[0].duration)
-                            $('.currentlength').empty()
-                            $('.currentlength').append(getmusiclength(musiccurrentlength))
-                            $('.totalength').empty()
-                            $('.totalength').append(musictotallength)
-                            $('.progress div').css({
-                                width: 0
-                            })
+    function setmusic(e) {
+        if (!$(e.target).hasClass('fa-heart')) {
+            musiccurrentlength = 0
+            var songID = $(this).attr('id')
+            $.ajax({
+                url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                method: "GET",
+                dataType: "json",
+        
+                error: function() {
+                    alert('le chargement de la liste des musiques a échoué')
+                },
+        
+                success: function(data) {
+                    musiccurrentlength = 0
+                    for (item in data.songs) {
+                        var currentsong = data.songs[item]
+                        if (currentsong.id == songID) {
+                            $('.musictitle').html(currentsong.name)
+                            $('.artistname span').html(currentsong.artist)
+                            $('#music').attr('src', currentsong.song)
+                            $('#music').attr('data-id', currentsong.id)
+                            $('.songimg').attr('src', currentsong.image)
+                            $('#music')[0].onloadedmetadata = () => {
+                                var musictotallength = getmusiclength($('#music')[0].duration)
+                                $('.currentlength').empty()
+                                $('.currentlength').append(getmusiclength(musiccurrentlength))
+                                $('.totalength').empty()
+                                $('.totalength').append(musictotallength)
+                                $('.progress div').css({
+                                    width: 0
+                                })
+                            }
+                            paused = true
+                            play(paused)
                         }
-                        paused = true
-                        play(paused)
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     function changetrack(counter) {

@@ -147,9 +147,6 @@ main li {
     justify-content: end;
 }
 
-#songlist li {
-    overflow-x:hidden;
-}
 #songlist p {
     height: 25px;
     font-size: 0.7em;
