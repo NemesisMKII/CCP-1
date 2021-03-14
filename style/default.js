@@ -432,23 +432,6 @@ $(document).ready(() => {
         })
     })
 
-    $('.musicfull i.fa-heart').click(function() {
-        if ($(this).hasClass('far')) {
-            user.favorites.push($('#music').data('id'))
-            localStorage.setItem('user', JSON.stringify(user))
-            $(this).removeClass('far')
-            $(this).addClass('fas')
-            $('.textbox h4').html('Chanson ajoutée aux favoris !')
-            $('.textbox').toggleClass('textboxshow')
-            setTimeout(() => {
-                $('.textbox').toggleClass('textboxshow')
-            }, 2500)
-        } else {
-            $(this).removeClass('fas')
-            $(this).addClass('far')
-        }
-    })
-
     function heartfavorite() {
         console.log($(this));
         ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas') )
