@@ -333,6 +333,7 @@ footer .progress {
     z-index: 10;
     overflow: hidden;
     transition: transform 1s;
+    display: block;
 }
 
 .musicfullhide {
