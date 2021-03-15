@@ -569,7 +569,6 @@ $(document).ready(() => {
     function heartfavorite() {
         var isliked = false
         var songID = $($(this).parent().parent()[0]).attr('id')
-        ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas'))
         if ($(this).hasClass('far')) {
             $(this).toggleClass('far')
             $(this).toggleClass('fas')
