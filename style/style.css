@@ -4,6 +4,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-y: hidden;
+    background-color: rgb(41, 37, 37);
 }
 
 body {
@@ -39,6 +40,7 @@ aside {
     top: 0;
     z-index: 10;
     color: white;
+    border-right: 1px solid rgb(90, 86, 86);;
 }
 
 #spotinein {
@@ -156,6 +158,10 @@ main::-webkit-scrollbar-thumb {
     margin-left: 10%;
 }
 
+#playlistinfocontainer {
+    margin-bottom: 5%;
+}
+
 .playlistscontainer {
     display: flex;
     flex-wrap: wrap;
@@ -237,7 +243,7 @@ footer img {
 }
 
 .searchwrapper {
-    height: 1000%;
+    max-height: 1000%;
 }
 
 #searchdiv {
