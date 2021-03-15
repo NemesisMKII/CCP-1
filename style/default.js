@@ -28,6 +28,16 @@ var logregTEMPLATE = `
         <input type="text" placeholder="mail" class="w-100 mt-3" id="usermail">
         <input type="text" placeholder="pseudo" class="w-100 mt-3" id="userpseudo">
         <input type="text" placeholder="mdp" class="w-100 mt-3" id="usermdp">
+        <input type="text" placeholder="Entrez l'URL de l'image..." class="w-100 mt-3" id="userimg">
+        <p>...Ou choisissez parmi les images ci-dessous: </p>
+        <div class="imgcontainer">
+            <div class='imglist'>
+                <img src="./data/profil images/spotinein.png" />
+                <img src="./data/profil images/1.png" />
+                <img src="./data/profil images/2.png" />
+                <img src="./data/profil images/3.png" />
+            </div>
+        </div>
         <button class="btn btn-success d-block mx-auto mt-3" id="btnInscription">inscription</button>
         <p class="mt-3">Déjà inscrit ? <a href="#" class="switch">Cliquez-ici</a></p>
     </header>
@@ -72,7 +82,7 @@ var pcsearchTEMPLATE = `
 <div class="searchbar">
     <i class="far fa-search"></i>
     <input type="text" placeholder="Rechercher..." id="searchinput">
-    <img src="" id="userimage">
+    <img src="" alt='error' id="userimage" />
     <p id="username"></p>
 </div>
 <div class="searchwrapper">
@@ -176,6 +186,7 @@ $(document).ready(() => {
         $('body').show()
         $('.headerwrapper').append(pcsearchTEMPLATE)
         $('#username').html(user.pseudo)
+        $('#userimage').attr('src', user.user_image)
         $('#searchinput').focus(inputfocus)
         $('.headerwrapper').css({
             'max-width': $('body').width() - $('aside').width()
@@ -365,6 +376,9 @@ $(document).ready(() => {
             $('.switch').click(logregswitch)
             $('#btnInscription').click(register)
             $('#btnConnexion').click(login)
+            $('.imglist img').click(function() {
+                $('#userimg').val($(this).attr('src'))
+            })
         }
         
         
@@ -884,13 +898,11 @@ $(document).ready(() => {
                     user = {
                         pseudo: $('#userpseudo').val(),
                         mail: $('#usermail').val(),
-                        first_name: 0,
-                        last_name: 0,
                         MDP: $('#usermdp').val(),
                         favorites: [],
-                        user_ID: uuidv4()
+                        user_ID: uuidv4(),
+                        user_image: $('#userimg').val()
                     }
-
                     userlist.push(user)
                     localStorage.setItem('userlist',JSON.stringify(userlist))
                     alert('Bienvenue sur Spotinein !')
@@ -920,6 +932,7 @@ $(document).ready(() => {
                         if ($('#staytune').is(':checked')) {
                             alert('check !')
                         }
+                        location.reload()
                     } else {
                         alert('Identifiants/mot de passe incorrects')
                     }
