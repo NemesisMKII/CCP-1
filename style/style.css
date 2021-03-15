@@ -28,15 +28,65 @@ header {
     z-index: 10;
 }
 
+
 aside {
     width: 17%;
-    min-width: 250px;
+    min-width: 200px;
     height: 87%;
     border: 1px solid black;
     position: fixed;
     left: 0;
     top: 0;
     z-index: 10;
+}
+
+#spotinein {
+    width: 200px;
+    height: 150px;
+    display: flex;
+    margin: auto;
+    align-self: center;
+}
+
+.asidediv {
+    height: 100%;
+}
+
+.drawheader {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    border-bottom: 1px solid;
+}
+
+.drawheader h3 {
+    display: none !important;
+}
+
+.drawcontainer {
+    height: 75%;
+}
+
+.drawcontainer ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawcontainer ul li {
+    height: 30px;
+    border-bottom: 1px solid;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+#disconnect {
+    margin-top: auto;
+}
+
+#menupdppicture {
+    display: none;
 }
 
 main {
@@ -54,6 +104,78 @@ main::-webkit-scrollbar {
 
 main::-webkit-scrollbar-thumb {
     background: rgb(63, 58, 58);
+}
+
+.pageIntro {
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid;
+    height: 35%;
+}
+
+#textdiv {
+    width: 65%;
+    margin: 5% 10%;
+    font-size: 1.5em;
+    line-height: 50%;
+}
+
+.lastheardcontainer {
+    width: 100%;
+    height: 35%;
+    display: flex;
+    flex-direction: row;
+}
+
+.lastheardObject {
+    width: 200px;
+    height: 225px;
+    border: 1px solid;
+}
+
+.lastheardObject img {
+    width: 100%;
+    height: 100%;
+}
+
+#songinfobar {
+    margin-top: 2%;
+    display: flex;
+    align-content: center;
+    border-bottom: 1px solid;
+}
+
+.listsongname {
+    width: 40%;
+}
+
+#songinfobar p {
+    margin-bottom: 0;
+    margin-left: 10%;
+}
+
+.playlistscontainer {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.playlistscontainer::-webkit-scrollbar {
+    width: 5px;
+}
+
+.playlistObject {
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    margin-bottom: 10%;
+}
+
+.playlistObject img {
+    width: auto;
+    height: 100%;
 }
 
 footer {
@@ -203,14 +325,14 @@ font-size: 130%;
 }
 
 .currentlength {
-    display: block !important;
+    display: block;
     position: absolute;
     top: -12px;
     left: -35px;
 }
 
 .totalength {
-    display: block !important;
+    display: block;
     position: absolute;
     top: -12px;
     right: -35px;

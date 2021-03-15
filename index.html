@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>titre</title>
+        <title>Spotinein</title>
         <!-- Bootstrap 5.0.0-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" 
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -27,13 +27,15 @@
         <aside>
             <div class="asidediv">
                 <div class="drawheader">
+                    <img src="data/spotinein_logo.png" id="spotinein">
                     <img class="w-25" src="https://p5.storage.canalblog.com/56/05/74726/6033585.jpg" id="menupdppicture">
                     <h3 class="text-center w-75">Nom prénom</h3>
                 </div>
                 <div class="drawcontainer">
                     <ul>
                         <li id="home">Accueil</li>
-                        <li id="playlists">Playlist</li>
+                        <li id="musics">Musiques</li>
+                        <li id="playlists">Playlists</li>
                         <li id="favorites">Favoris</li>
                         <li id="connect">Connexion</li>
                         <li id="disconnect">Se déconnecter</li>
@@ -42,6 +44,17 @@
             </div> 
         </aside>
         <main>
+            <div class="pageIntro">
+                <h1 class="text-center">Bienvenue sur Spotinein, Mein petit Frolhein !</h1>
+                <div id="textdiv">
+                    <p>Izi tu peux t'adonner à tous tes petits plaisirs ... musicaux !</p>
+                    <p>Commence donc par t'inscrire mein petit ... et n'oublie pas</p>
+                    <p>ça restera notre petit secret !</p>
+                </div>
+            </div>
+            <h1 class="m-3 lastheardtitles">Derniers titres écoutés</h1>
+            <div class="lastheardcontainer">
+            </div>
         </main>
         <div class="footerwrapper position-relative">
             <footer class="w-100 position-fixed bottom 0 d-flex">
@@ -59,9 +72,9 @@
                         <i class="fas fa-play text-white mx-4 play"></i>
                         <i class="fas fa-step-forward text-white mx-4 forwards" data-value="1"></i>
                     </div>
-                    <p class="text-white d-none">
-                        <span class="currentlength d-none"></span>
-                        <span class="totalength d-none"></span>
+                    <p class="text-white">
+                        <span class="currentlength"></span>
+                        <span class="totalength"></span>
                     </p>
                 </div>
                 <div class="volumediv">

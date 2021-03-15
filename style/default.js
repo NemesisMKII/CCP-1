@@ -1,10 +1,24 @@
+var homeTEMPLATE = `
+<div class="pageIntro">
+    <h1 class="text-center">Bienvenue sur Spotinein, Mein petit Frolhein !</h1>
+    <div id="textdiv">
+        <p>Izi tu peux t'adonner à tous tes petits plaisirs ... musicaux !</p>
+        <p>Commence donc par t'inscrire mein petit ... et n'oublie pas</p>
+        <p>ça restera notre petit secret !</p>
+    </div>
+</div>
+<h1 class="m-3 lastheardtitles">Derniers titres écoutés</h1>
+<div class="lastheardcontainer">
+</div>
+`
+
 var logregTEMPLATE = `
 <h1 class="text-center">Connexion / Inscription</h1>
 <form class="text-center w-50 mx-auto mt-5" id="connexion">
     <header class="w-100 h-50 d-flex flex-column">
         <input type="text" placeholder="mail/pseudo" class="w-100 mt-3" id="login">
         <input type="text" placeholder="password" class="w-100 mt-3" id="password">
-        <span class="d-inline-flex mt-3 mx-auto align-items-center "><input type="checkbox" class="mx-2" id="staytune"><p class="m-0">Rester connecté </p></span>
+        <span class="d-inline-flex mt-3 mx-auto align-items-center"><input type="checkbox" class="mx-2" id="staytune"><p class="m-0">Rester connecté </p></span>
         <button class="btn btn-success d-block mx-auto mt-3" id="btnConnexion">Connexion</button>
         <p class="mt-3">Pas encore inscrit ? <a href="#" class="switch">Cliquez-ici</a></p>
     </header>
@@ -33,6 +47,10 @@ var showplaylistTEMPLATE = `
 <div id="playlistinfocontainer">
     <h1 class="text-center"></h1>
     <img src="" alt="" class="d-block mx-auto mt-4" id="playlistimg">
+</div>
+<div id="songinfobar">
+    <p class="listsongname">Nom</p>
+    <p>Artiste</p>
 </div>
 <ul id="songlist">
 </ul>
@@ -75,16 +93,27 @@ $(document).ready(() => {
         if ($('#playlistname').val() == "") {
             alert('Vide !')
         } else {
-            playlist = {
-                playlist_name: $('#playlistname').val(),
-                user_ID: user.user_ID,
-                playlist_ID: uuidv4(),
-                songs: []
+            var existing = false
+            for (item in playlists) {
+                if ($('#playlistname').val() == playlists[item].playlist_name) {
+                    existing = true
+                }
             }
-
-            playlists.push(playlist)
-            localStorage.setItem('playlists', JSON.stringify(playlists))
-            $('#addplaylistModal').modal('hide')
+            if (existing == false) {
+                playlist = {
+                    playlist_name: $('#playlistname').val(),
+                    user_ID: user.user_ID,
+                    playlist_ID: uuidv4(),
+                    songs: []
+                }
+    
+                playlists.push(playlist)
+                localStorage.setItem('playlists', JSON.stringify(playlists))
+                $('#addplaylistModal').modal('hide')
+            } else {
+                alert('Une playlist portant ce nom existe déjà !')
+            }
+            
         }
 
     })
@@ -125,7 +154,11 @@ $(document).ready(() => {
         }
     }
 
-    
+    $('.pageIntro').after(playlistpage())
+    setTimeout(() => {
+        $('#addplaylistBtn').hide()
+        appendlastheards()
+    },100);
 
     // Get the user list if there is any, or create it and store it in localstorage
     if (!localStorage.getItem('userlist')) {
@@ -157,6 +190,13 @@ $(document).ready(() => {
         localStorage.setItem('playlists', JSON.stringify(playlists))
     } else {
         var playlists = JSON.parse(localStorage.getItem('playlists'))
+    }
+
+    if (!localStorage.getItem('lastheards')) {
+        var lastheards = []
+        localStorage.setItem('lastheards', JSON.stringify(lastheards))
+    } else {
+        var lastheards = JSON.parse(localStorage.getItem('lastheards'))
     }
 
     $('footer > *').toggleClass('delaytransition')
@@ -218,7 +258,19 @@ $(document).ready(() => {
             } else {
                 switch($(this).attr('id')) {
                     case 'home':
+                        $('main').append(homeTEMPLATE)
+                        $('.pageIntro').after(playlistpage())
+                        setTimeout(() => {
+                            $('#addplaylistBtn').hide()
+                            appendlastheards()
+                        },100);
+                        break
+                    case 'musics':
                         $('main').append(`
+                        <div id="songinfobar">
+                            <p class="listsongname">Nom</p>
+                            <p>Artiste</p>
+                        </div>
                         <ul id="songlist"></ul>
                         `)
                         $.ajax({
@@ -237,8 +289,8 @@ $(document).ready(() => {
                                         <div class="d-flex align-items-center">
                                             <img src="${data.songs[item].image}" class="musicimg" alt="" />
                                             <div class="music-info">
-                                                <p>${data.songs[item].name}</p>
-                                                <p>|</p>
+                                                <p class="listsongname">${data.songs[item].name}</p>
+                                                ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
                                                 <p>${data.songs[item].artist}</p>
                                             </div>
                                             <i class="far fa-headphones ms-auto"></i>
@@ -282,8 +334,8 @@ $(document).ready(() => {
                                             <div class="d-flex align-items-center">
                                                 <img src="${datasongs[item].image}" class="musicimg" alt="" />
                                                 <div class="music-info">
-                                                    <p>${datasongs[item].name}</p>
-                                                    <p>|</p>
+                                                    <p class="listsongname">${datasongs[item].name}</p>
+                                                    ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
                                                     <p>${datasongs[item].artist}</p>
                                                 </div>
                                                 <i class="far fa-headphones ms-auto"></i>
@@ -314,6 +366,46 @@ $(document).ready(() => {
         
     })
 
+    function setlastheards(musicID) {
+        console.log(lastheards.length);
+        if (lastheards.length >= 4) {
+            lastheards.splice(0, 1)
+            lastheards.push(musicID)
+        } else {
+            lastheards.push(musicID)
+        }
+        console.log(lastheards.length);
+        localStorage.setItem('lastheards', JSON.stringify(lastheards))
+    }
+
+    function appendlastheards() {
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Erreur lors du chargement des musiques.')
+            },
+
+            success: function(data) {
+                var songs = data.songs
+                for(song in lastheards) {
+                    for (songitem in songs) {
+                        if (songs[songitem].id == lastheards[song]) {
+                            $('.lastheardcontainer').prepend(`
+                            <div class="lastheardObject ms-3" id="${songs[songitem].id}">
+                                <img src="${songs[songitem].image}" />
+                                <p>${songs[songitem].name}</p>
+                            </div>
+                            `)
+                        }
+                    }
+                }
+                $('.lastheardObject').click(setmusic)
+            }
+        })
+    }
 
     function playlistpage() {
         $.ajax({
@@ -400,8 +492,8 @@ $(document).ready(() => {
                                         <div class="d-flex align-items-center">
                                             <img src="${data.songs[item].image}" class="musicimg" alt="" />
                                             <div class="music-info">
-                                                <p>${data.songs[item].name}</p>
-                                                <p>|</p>
+                                                <p class="listsongname">${data.songs[item].name}</p>
+                                                ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
                                                 <p>${data.songs[item].artist}</p>
                                             </div>
                                             <i class="far fa-headphones ms-auto"></i>
@@ -413,13 +505,14 @@ $(document).ready(() => {
                             }
                         }
                         $('#songlist li').click(setmusic)
-                        $('i.fa-arrow-left').click(() => {
-                            $('main').empty()
-                            playlistpage()
-                        })
+                        
                         checkheartfavorite()
                         $('#songlist i.fa-heart').click(heartfavorite)
                     }
+                    $('i.fa-arrow-left').click(() => {
+                        $('main').empty()
+                        playlistpage()
+                    })
                 }, 400)
                 setTimeout($('main').fadeIn(), 1000)
                 }
@@ -511,7 +604,6 @@ $(document).ready(() => {
                 </div>
                 `)
                 for (songs in playlist.songs) {
-                    console.log(playlist.songs[songs]);
                     if (music == playlist.songs[songs]) {
                         $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
                     }
@@ -589,7 +681,6 @@ $(document).ready(() => {
                 user.favorites.push(songID)
             }
         }
-        console.log(user.favorites)
         localStorage.setItem('user', JSON.stringify(user))
     }
 
@@ -711,6 +802,7 @@ $(document).ready(() => {
                                     $('.progress div').css({
                                         width: 0
                                     })
+                                    setlastheards(music)
                                 }
                                 paused = true
                                 play(paused)
@@ -752,6 +844,7 @@ $(document).ready(() => {
                             $('.progress div').css({
                                 width: 0
                             })
+                            setlastheards(currentsong.id)
                         }
                         paused = true
                         play(paused)

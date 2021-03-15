@@ -2,6 +2,10 @@
     height: 13%;
 }
 
+#spotinein {
+    display: none;
+}
+
 .heighttoggle {
     height: 0 !important;
 }
@@ -85,8 +89,8 @@ aside {
     z-index: 13;
 }
 
-
 #menupdppicture {
+    display: block;
     width: 75px;
     height: 75px;
 }
@@ -422,4 +426,5 @@ footer .progress {
 .pcsearchbar, .pcsearchwrapper {
     display: none;
 }
+
 
