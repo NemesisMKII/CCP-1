@@ -72,6 +72,8 @@ var pcsearchTEMPLATE = `
 <div class="searchbar">
     <i class="far fa-search"></i>
     <input type="text" placeholder="Rechercher..." id="searchinput">
+    <img src="" id="userimage">
+    <p id="username"></p>
 </div>
 <div class="searchwrapper">
     <div id="searchdiv">
@@ -118,42 +120,6 @@ $(document).ready(() => {
 
     })
 
-    //Detects if user is on a device  other than pc, and if so, applies mobile css on it
-    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
-        $('#css').after(`
-        <!-- CSS style for mobile -->
-        <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
-        `)
-        $('body').show()
-    } else {
-        $('body').show()
-        $('.headerwrapper').append(pcsearchTEMPLATE)
-        $('#searchinput').focus(inputfocus)
-        $('.headerwrapper').css({
-            'max-width': $('body').width() - $('aside').width()
-        })
-        $('main').css({
-            'width': $('body').width() - $('aside').width(),
-            'margin-left': $('aside').width()
-        })
-        $('.soundprogress').css({
-            'height': $('footer').height() - 20
-        })
-
-        window.onresize = function() {
-            $('.headerwrapper').css({
-                'max-width': $('body').width() - $('aside').width()
-            })
-            $('main').css({
-                'width': $('body').width() - $('aside').width(),
-                'margin-left': $('aside').width()
-            })
-            $('.soundprogress').css({
-                'height': $('footer').height() - 20
-            })
-        }
-    }
-
     $('.pageIntro').after(playlistpage())
     setTimeout(() => {
         $('#addplaylistBtn').hide()
@@ -197,6 +163,43 @@ $(document).ready(() => {
         localStorage.setItem('lastheards', JSON.stringify(lastheards))
     } else {
         var lastheards = JSON.parse(localStorage.getItem('lastheards'))
+    }
+
+    //Detects if user is on a device  other than pc, and if so, applies mobile css on it
+    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
+        $('#css').after(`
+        <!-- CSS style for mobile -->
+        <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
+        `)
+        $('body').show()
+    } else {
+        $('body').show()
+        $('.headerwrapper').append(pcsearchTEMPLATE)
+        $('#username').html(user.pseudo)
+        $('#searchinput').focus(inputfocus)
+        $('.headerwrapper').css({
+            'max-width': $('body').width() - $('aside').width()
+        })
+        $('main').css({
+            'width': $('body').width() - $('aside').width(),
+            'margin-left': $('aside').width()
+        })
+        $('.soundprogress').css({
+            'height': $('footer').height() - 20
+        })
+
+        window.onresize = function() {
+            $('.headerwrapper').css({
+                'max-width': $('body').width() - $('aside').width()
+            })
+            $('main').css({
+                'width': $('body').width() - $('aside').width(),
+                'margin-left': $('aside').width()
+            })
+            $('.soundprogress').css({
+                'height': $('footer').height() - 20
+            })
+        }
     }
 
     $('footer > *').toggleClass('delaytransition')
@@ -243,8 +246,7 @@ $(document).ready(() => {
                     searchresults($('#searchinput').val().toLowerCase(), songlist)
                     $('#searchresult li').unbind('click')
                     $('#searchresult li').click(setmusic)
-                })
-                
+                })    
             },
         })
     }
@@ -267,6 +269,7 @@ $(document).ready(() => {
                         break
                     case 'musics':
                         $('main').append(`
+                        <div class="pageIntro"></div>
                         <div id="songinfobar">
                             <p class="listsongname">Nom</p>
                             <p>Artiste</p>
@@ -322,6 +325,7 @@ $(document).ready(() => {
                         break
                     case 'favorites':
                         $('main').append(`
+                        <div class="pageIntro"></div>
                         <ul id="songlist"></ul>
                         `)
                         $.get('https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json', function(data) {
