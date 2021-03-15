@@ -40,7 +40,7 @@ aside {
 }
 
 main {
-    height: 82%;
+    height: 84%;
     margin-left: 17%;
     overflow-y: scroll;
     width: 83%;
@@ -64,17 +64,24 @@ footer {
     z-index: 10;
     bottom: 0;
 }
+
 footer img {
     max-width: 165px;
     max-height: 90%;
+    align-self: center;
 }
 
-#progress {
+.progress {
     height: 3px;
     background-color: grey;
 }
 
-#progress div {
+.progress:hover {
+    height: 10px;
+    cursor: pointer;
+}
+
+.progress div {
     background-color: white;
     height: 100%;
 }
@@ -137,6 +144,74 @@ footer img {
 
 .playbar {
     top: 15%;
-    width: 300px;
-    transform: translateX(-50%);
+    width: 600px;
+    margin-left: -300px;
+}
+
+.playbar p {
+    display: block !important;
+}
+
+.soundprogress {
+    -webkit-appearance: slider-vertical;
+    width: 20px;
+    max-height: 100px;
+}
+
+.volumediv {
+    position: absolute;
+    right: 1%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.textcontainer {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-left: 0.5%;
+}
+
+.artistname {
+font-size: 80%;
+}
+
+.musictitle {  
+font-size: 130%;
+}
+
+#songlist li {
+    height: 60px;
+    border-bottom: 1px solid;
+}
+
+#songlist li p  {
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+#songlist li div {
+    height: inherit;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    width: 100%;
+}
+
+#songlist img {   
+    width: 50px;
+    height: 50px;
+}
+
+.currentlength {
+    display: block !important;
+    position: absolute;
+    top: -12px;
+    left: -35px;
+}
+
+.totalength {
+    display: block !important;
+    position: absolute;
+    top: -12px;
+    right: -35px;
 }

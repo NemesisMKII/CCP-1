@@ -100,10 +100,27 @@ $(document).ready(() => {
         $('body').show()
         $('.headerwrapper').append(pcsearchTEMPLATE)
         $('#searchinput').focus(inputfocus)
+        $('.headerwrapper').css({
+            'max-width': $('body').width() - $('aside').width()
+        })
+        $('main').css({
+            'width': $('body').width() - $('aside').width(),
+            'margin-left': $('aside').width()
+        })
+        $('.soundprogress').css({
+            'height': $('footer').height() - 20
+        })
 
         window.onresize = function() {
             $('.headerwrapper').css({
                 'max-width': $('body').width() - $('aside').width()
+            })
+            $('main').css({
+                'width': $('body').width() - $('aside').width(),
+                'margin-left': $('aside').width()
+            })
+            $('.soundprogress').css({
+                'height': $('footer').height() - 20
             })
         }
     }
@@ -219,11 +236,13 @@ $(document).ready(() => {
                                     <li id="${data.songs[item].id}">
                                         <div class="d-flex align-items-center">
                                             <img src="${data.songs[item].image}" class="musicimg" alt="" />
-                                            <div>
+                                            <div class="music-info">
                                                 <p>${data.songs[item].name}</p>
+                                                <p>|</p>
                                                 <p>${data.songs[item].artist}</p>
                                             </div>
-                                            <i class="far fa-heart ms-auto"></i>
+                                            <i class="far fa-headphones ms-auto"></i>
+                                            <i class="far fa-heart"></i>
                                         </div>
                                     </li>
                                     `)
@@ -231,6 +250,7 @@ $(document).ready(() => {
                                 checkheartfavorite()
                                 $('#songlist li').click(setmusic)
                                 $('#songlist i.fa-heart').click(heartfavorite)
+                                $('#songlist i.fa-headphones').click(addtoplaylist)
                             }
                         })
                         break
@@ -240,6 +260,10 @@ $(document).ready(() => {
                         $('.switch').click(logregswitch)
                         $('#btnInscription').click(register)
                         $('#btnConnexion').click(login)
+                        break
+                    case 'disconnect':
+                        localStorage.removeItem('user')
+                        location.reload()
                         break
                     case 'playlists':
                         playlistpage()
@@ -257,11 +281,13 @@ $(document).ready(() => {
                                         <li id="${datasongs[item].id}">
                                             <div class="d-flex align-items-center">
                                                 <img src="${datasongs[item].image}" class="musicimg" alt="" />
-                                                <div>
+                                                <div class="music-info">
                                                     <p>${datasongs[item].name}</p>
+                                                    <p>|</p>
                                                     <p>${datasongs[item].artist}</p>
                                                 </div>
-                                                <i class="far fa-heart ms-auto"></i>
+                                                <i class="far fa-headphones ms-auto"></i>
+                                                <i class="far fa-heart"></i>
                                             </div>
                                         </li>
                                         `)
@@ -270,6 +296,7 @@ $(document).ready(() => {
                             }
                             $('#songlist i.fa-heart').click(heartfavorite)
                             checkheartfavorite()
+                            $('#songlist i.fa-headphones').click(addtoplaylist)
                         })
                         break
                     default:
@@ -372,11 +399,13 @@ $(document).ready(() => {
                                     <li id="${data.songs[item].id}">
                                         <div class="d-flex align-items-center">
                                             <img src="${data.songs[item].image}" class="musicimg" alt="" />
-                                            <div>
+                                            <div class="music-info">
                                                 <p>${data.songs[item].name}</p>
+                                                <p>|</p>
                                                 <p>${data.songs[item].artist}</p>
                                             </div>
-                                            <i class="far fa-heart ms-auto"></i>
+                                            <i class="far fa-headphones ms-auto"></i>
+                                            <i class="far fa-heart"></i>
                                         </div>
                                     </li>
                                     `)
@@ -412,14 +441,17 @@ $(document).ready(() => {
 
     $('.soundprogress').on('input',function() {
         $('#music')[0].volume = $(this).val() / 100
-        $('i.fa').removeClass('fa-volume')
+        var volume = $(this).val()
+        if (volume >= 75) {
+            $('i.fa').attr('class', 'text-white fa fa-volume-up')
+        } else if(volume <= 74 && volume >= 26) {
+            $('i.fa').attr('class', 'text-white fa fa-volume')
+        } else if (volume <= 25 && volume > 1) {
+            $('i.fa').attr('class', 'text-white fa fa-volume-down')
+        } else {
+            $('i.fa').attr('class', 'text-white fa fa-volume-mute')
+        }
     })
-
-    /* switch($('.soundprogress').val()) {
-        case ($('.soundprogress').val() <= 25): 
-            $('i.fa').removeClass('fa-volume')
-            $('i.fa').addClass('fa-volume-down')
-    } */
 
     $('.progress').click(function(event) {
         var posX = event.pageX - $(this).offset().left
@@ -457,11 +489,17 @@ $(document).ready(() => {
         }
     })
 
-    $('.musicfull i.fa-headphones').click(function() {
+    $('.musicfull i.fa-headphones').click(addtoplaylist)
+
+    function addtoplaylist() {
+        if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
+            var music = $('#music').data('id')
+        } else {
+            var music = $($(this).parent().parent()[0]).attr('id')
+        }
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
-            var currentsongID = $('#music').data('id')
             $('#addtoplaylistModal').modal('show')
             $('#addtoplaylistModal .modal-body').empty()
             for (item in playlists) {
@@ -472,10 +510,9 @@ $(document).ready(() => {
                     <button class="btn btn-success">Ajouter</button>
                 </div>
                 `)
-                console.log(playlist);
                 for (songs in playlist.songs) {
                     console.log(playlist.songs[songs]);
-                    if (currentsongID == playlist.songs[songs]) {
+                    if (music == playlist.songs[songs]) {
                         $(`#addtoplaylistModal div[data-id="${playlist.playlist_ID}"] button`).html('Ajoutée !')
                     }
                 }
@@ -483,7 +520,8 @@ $(document).ready(() => {
             $('#addtoplaylistModal .modal-body button').click(function() {
                 var alreadyadded = false
                 var id = $(this).parent().data('id')
-                var music = $('#music').data('id')
+                
+                
                 for (item in playlists) {
                     if (id == playlists[item].playlist_ID) {
                         var playlist = playlists[item]
@@ -513,7 +551,7 @@ $(document).ready(() => {
                 $('#addtoplaylistModal').modal('hide')
             })
         }
-    })
+    }
 
     function checkheartfavorite() {
         for (var song = 0; song < $($('#songlist').children()).length; song++) {
@@ -531,8 +569,14 @@ $(document).ready(() => {
     function heartfavorite() {
         var isliked = false
         var songID = $($(this).parent().parent()[0]).attr('id')
-        console.log(songID);
         ($(this).hasClass('far') ? $(this).toggleClass('far') && $(this).toggleClass('fas') : $(this).toggleClass('far') && $(this).toggleClass('fas'))
+        if ($(this).hasClass('far')) {
+            $(this).toggleClass('far')
+            $(this).toggleClass('fas')
+        } else {
+            $(this).toggleClass('far')
+            $(this).toggleClass('fas')
+        }
         if (user.favorites.length == 0) {
             user.favorites.push(songID)
         } else {
@@ -634,44 +678,48 @@ $(document).ready(() => {
     }
     
     function setmusic(e) {
-        if (!$(e.target).hasClass('fa-heart')) {
-            musiccurrentlength = 0
-            var songID = $(this).attr('id')
-            $.ajax({
-                url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-                method: "GET",
-                dataType: "json",
-        
-                error: function() {
-                    alert('le chargement de la liste des musiques a échoué')
-                },
-        
-                success: function(data) {
-                    musiccurrentlength = 0
-                    for (item in data.songs) {
-                        var currentsong = data.songs[item]
-                        if (currentsong.id == songID) {
-                            $('.musictitle').html(currentsong.name)
-                            $('.artistname span').html(currentsong.artist)
-                            $('#music').attr('src', currentsong.song)
-                            $('#music').attr('data-id', currentsong.id)
-                            $('.songimg').attr('src', currentsong.image)
-                            $('#music')[0].onloadedmetadata = () => {
-                                var musictotallength = getmusiclength($('#music')[0].duration)
-                                $('.currentlength').empty()
-                                $('.currentlength').append(getmusiclength(musiccurrentlength))
-                                $('.totalength').empty()
-                                $('.totalength').append(musictotallength)
-                                $('.progress div').css({
-                                    width: 0
-                                })
+        var music = $(this).attr('id')
+        if (e.target == $('.fa-heart')[music -1] || e.target == $('.fa-headphones')[music -1]) {
+        } else {
+            if ($(this).attr('id') != $('#music').attr('data-id')) {
+                musiccurrentlength = 0
+                var songID = $(this).attr('id')
+                $.ajax({
+                    url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                    method: "GET",
+                    dataType: "json",
+            
+                    error: function() {
+                        alert('le chargement de la liste des musiques a échoué')
+                    },
+            
+                    success: function(data) {
+                        musiccurrentlength = 0
+                        for (item in data.songs) {
+                            var currentsong = data.songs[item]
+                            if (currentsong.id == songID) {
+                                $('.musictitle').html(currentsong.name)
+                                $('.artistname span').html(currentsong.artist)
+                                $('#music').attr('src', currentsong.song)
+                                $('#music').attr('data-id', currentsong.id)
+                                $('.songimg').attr('src', currentsong.image)
+                                $('#music')[0].onloadedmetadata = () => {
+                                    var musictotallength = getmusiclength($('#music')[0].duration)
+                                    $('.currentlength').empty()
+                                    $('.currentlength').append(getmusiclength(musiccurrentlength))
+                                    $('.totalength').empty()
+                                    $('.totalength').append(musictotallength)
+                                    $('.progress div').css({
+                                        width: 0
+                                    })
+                                }
+                                paused = true
+                                play(paused)
                             }
-                            paused = true
-                            play(paused)
                         }
                     }
-                }
-            })
+                })
+            }
         }
     }
 
@@ -735,10 +783,8 @@ $(document).ready(() => {
         } else {
             let mailregex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g)
             if ($('#usermail').val().match(mailregex)) {
-                alert("mail ok")
                 let passwordregex = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\&\#\-\_\+\=\@\{\}\[\]\(\)])[A-Za-z\d\&\#\-\_\+\=\@\{\}\[\]\(\)]{6,}$/gm)
                 if ($('#usermdp').val().match(passwordregex)) {
-                    alert('mdp ok')
                     user = {
                         pseudo: $('#userpseudo').val(),
                         mail: $('#usermail').val(),
@@ -751,6 +797,9 @@ $(document).ready(() => {
 
                     userlist.push(user)
                     localStorage.setItem('userlist',JSON.stringify(userlist))
+                    alert('Bienvenue sur Spotinein !')
+                    location.reload(
+                    )
                 } else {
                     alert('mdp pas ok')
                 }

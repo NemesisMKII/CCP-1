@@ -17,6 +17,10 @@ footer div.volumediv {
     background-color: rgb(87, 77, 77);
 }
 
+.headerwrapper header {
+    max-width: 100% !important;
+}
+
 .menudrawer {
     display: inline-block !important;
     text-align: center;
@@ -146,6 +150,10 @@ main li {
     display: flex;
     vertical-align: middle;
     justify-content: end;
+}
+
+#songlist .fa-headphones {
+    display: none;
 }
 
 #songlist p {
@@ -291,6 +299,7 @@ footer .artistname {
 
 footer .playbar {
     height: 100px;
+    width: 176px;
     left: 50%;
     margin-left: -87.5px;
     top: 50%;
@@ -345,7 +354,7 @@ footer .progress {
     max-width: 70%;
     height: 55%;
     display: block;
-    margin: 10% auto;
+    margin: 5% auto;
 }
 
 .musicfull .textcontainer {
@@ -379,6 +388,20 @@ footer .progress {
     height: 10px;
 }
 
+.currentlength {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: inline-block !important;
+}
+
+.totalength {
+    position: relative;    
+    top: 0;  
+    right: 0;
+    display: inline-block !important;
+}
+
 .musicfull i {
     font-size: 1.8em;
     margin-top: 10px;
@@ -399,3 +422,4 @@ footer .progress {
 .pcsearchbar, .pcsearchwrapper {
     display: none;
 }
+
