@@ -213,11 +213,6 @@ $(document).ready(() => {
         $('#menupdppicture').attr('src', user.user_image)
         $('.username').html(user.pseudo)
         $('body').show()
-        $('body').css({
-            height: '100vh',
-            width: '100vw'
-        })
-
     } else {
         $('body').show()
         $('.headerwrapper').append(pcsearchTEMPLATE)
