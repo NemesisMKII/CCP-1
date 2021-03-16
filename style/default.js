@@ -9,6 +9,7 @@ var homeTEMPLATE = `
 </div>
 <h1 class="m-3 lastheardtitles">Derniers titres écoutés</h1>
 <div class="lastheardcontainer">
+    <div class='scrollable'></div>
 </div>
 `
 
@@ -36,6 +37,14 @@ var logregTEMPLATE = `
                 <img src="./data/profil images/1.png" />
                 <img src="./data/profil images/2.png" />
                 <img src="./data/profil images/3.png" />
+                <img src="./data/profil images/4.png" />
+                <img src="./data/profil images/5.png" />
+                <img src="./data/profil images/6.png" />
+                <img src="./data/profil images/7.png" />
+                <img src="./data/profil images/8.png" />
+                <img src="./data/profil images/9.png" />
+                <img src="./data/profil images/10.png" />
+                <img src="./data/profil images/11.png" />
             </div>
         </div>
         <button class="btn btn-success d-block mx-auto mt-3" id="btnInscription">inscription</button>
@@ -94,6 +103,10 @@ var pcsearchTEMPLATE = `
 `
 
 $(document).ready(() => {
+    $('#spotinein').click(() => {
+        location.reload()
+    })
+    console.log(jQuery.isEmptyObject(user));
     let viewheight = $(window).height();
     let viewwidth = $(window).width();
     let viewport = document.querySelector("meta[name=viewport]");
@@ -174,6 +187,12 @@ $(document).ready(() => {
     } else {
         var lastheards = JSON.parse(localStorage.getItem('lastheards'))
     }
+    
+    if (jQuery.isEmptyObject(user)) {
+        $('#disconnect').hide()
+    } else {
+        $('#connect').hide()
+    }
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
     if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
@@ -181,6 +200,8 @@ $(document).ready(() => {
         <!-- CSS style for mobile -->
         <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
         `)
+        $('#menupdppicture').attr('src', user.user_image)
+        $('.username').html(user.pseudo)
         $('body').show()
     } else {
         $('body').show()
@@ -364,6 +385,7 @@ $(document).ready(() => {
                             $('#songlist i.fa-heart').click(heartfavorite)
                             checkheartfavorite()
                             $('#songlist i.fa-headphones').click(addtoplaylist)
+                            $('#songlist li').click(setmusic)
                         })
                         break
                     default:
@@ -384,15 +406,94 @@ $(document).ready(() => {
         
     })
 
-    function setlastheards(musicID) {
-        console.log(lastheards.length);
-        if (lastheards.length >= 4) {
-            lastheards.splice(0, 1)
-            lastheards.push(musicID)
+
+    $('.menudrawer').click(() => {
+        $('aside').toggleClass('hide')
+    })
+
+    $('aside').click(function(e) {
+        if (e.target !== this) {
+            return
         } else {
-            lastheards.push(musicID)
+            $('aside').toggleClass('hide')
+        } 
+    })
+
+    $('.soundprogress').on('input',function() {
+        $('#music')[0].volume = $(this).val() / 100
+        var volume = $(this).val()
+        if (volume >= 75) {
+            $('i.fa').attr('class', 'text-white fa fa-volume-up')
+        } else if(volume <= 74 && volume >= 26) {
+            $('i.fa').attr('class', 'text-white fa fa-volume')
+        } else if (volume <= 25 && volume > 1) {
+            $('i.fa').attr('class', 'text-white fa fa-volume-down')
+        } else {
+            $('i.fa').attr('class', 'text-white fa fa-volume-mute')
         }
-        console.log(lastheards.length);
+    })
+
+    $('.progress').click(function(event) {
+        var posX = event.pageX - $(this).offset().left
+        $(this).children(1).css({
+            width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
+        })
+        $('#music')[0].currentTime = $('#music')[0].duration * (posX / $(this).css('width').split('px')[0])
+    })
+
+    $('.muteBtn').click(() => {
+        alert('click')
+    })
+
+    $('.play').click(() => {
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            play(paused)
+        }
+    })
+
+    $('.forwards').click(() => {
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            changetrack(1)
+        }
+    })
+
+    $('.backwards').click(() => {
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            changetrack(-1)
+        }
+    })
+
+    $('.musicfull i.fa-headphones').click(addtoplaylist)
+
+    /* ////////////////////////////////////////
+    ///////////////////////////////////////////
+    ///////////////////////////////////////////
+    ////////////// FUNCTIONS //////////////////
+    ///////////////////////////////////////////
+    ///////////////////////////////////////////
+    /////////////////////////////////////////// */
+
+    function setlastheards(musicID) {
+        var same = false
+        for (item in lastheards) {
+            if (lastheards[item] == musicID) {
+                same = true
+            }
+        }
+        if (same == false) {
+            if (lastheards.length >= 4) {
+                lastheards.splice(0, 1)
+                lastheards.push(musicID)
+            } else {
+                lastheards.push(musicID)
+            }
+        }
         localStorage.setItem('lastheards', JSON.stringify(lastheards))
     }
 
@@ -411,7 +512,7 @@ $(document).ready(() => {
                 for(song in lastheards) {
                     for (songitem in songs) {
                         if (songs[songitem].id == lastheards[song]) {
-                            $('.lastheardcontainer').prepend(`
+                            $('.scrollable').prepend(`
                             <div class="lastheardObject ms-3" id="${songs[songitem].id}">
                                 <img src="${songs[songitem].image}" />
                                 <p>${songs[songitem].name}</p>
@@ -538,76 +639,8 @@ $(document).ready(() => {
         
     }
 
-    $('.menudrawer').click(() => {
-        $('aside').toggleClass('hide')
-    })
-
-    $('aside').click(function(e) {
-        if (e.target !== this) {
-            return
-        } else {
-            $('aside').toggleClass('hide')
-        } 
-    })
-
-    $('.soundprogress').on('input',function() {
-        $('#music')[0].volume = $(this).val() / 100
-        var volume = $(this).val()
-        if (volume >= 75) {
-            $('i.fa').attr('class', 'text-white fa fa-volume-up')
-        } else if(volume <= 74 && volume >= 26) {
-            $('i.fa').attr('class', 'text-white fa fa-volume')
-        } else if (volume <= 25 && volume > 1) {
-            $('i.fa').attr('class', 'text-white fa fa-volume-down')
-        } else {
-            $('i.fa').attr('class', 'text-white fa fa-volume-mute')
-        }
-    })
-
-    $('.progress').click(function(event) {
-        var posX = event.pageX - $(this).offset().left
-        $(this).children(1).css({
-            width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
-        })
-        $('#music')[0].currentTime = $('#music')[0].duration * (posX / $(this).css('width').split('px')[0])
-    })
-
-    $('.muteBtn').click(() => {
-        alert('click')
-    })
-
-    $('.play').click(() => {
-        if (jQuery.isEmptyObject(user)) {
-            alert('Connectez-vous pour utiliser cette fonctionnalité')
-        } else {
-            play(paused)
-        }
-    })
-
-    $('.forwards').click(() => {
-        if (jQuery.isEmptyObject(user)) {
-            alert('Connectez-vous pour utiliser cette fonctionnalité')
-        } else {
-            changetrack(1)
-        }
-    })
-
-    $('.backwards').click(() => {
-        if (jQuery.isEmptyObject(user)) {
-            alert('Connectez-vous pour utiliser cette fonctionnalité')
-        } else {
-            changetrack(-1)
-        }
-    })
-
-    $('.musicfull i.fa-headphones').click(addtoplaylist)
-
     function addtoplaylist() {
-        if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
-            var music = $('#music').data('id')
-        } else {
-            var music = $($(this).parent().parent()[0]).attr('id')
-        }
+        var music = $($(this).parent().parent()[0]).attr('id')
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -888,7 +921,7 @@ $(document).ready(() => {
 
     function register(e) {
         e.preventDefault()
-        if (!$('#usermail').val() || !$('#userpseudo').val() || !$('#usermdp').val()) {
+        if (!$('#usermail').val() || !$('#userpseudo').val() || !$('#usermdp').val() || !$('#userimg').val()) {
             alert('remplissez les champs')
         } else {
             let mailregex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g)
