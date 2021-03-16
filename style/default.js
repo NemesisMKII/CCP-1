@@ -26,7 +26,7 @@ var logregTEMPLATE = `
 <form class="text-center w-50 mx-auto mt-5" id="connexion">
     <header class="w-100 h-50 d-flex flex-column">
         <input type="text" placeholder="mail/pseudo" class="w-100 mt-3" id="login">
-        <input type="text" placeholder="password" class="w-100 mt-3" id="password">
+        <input type="password" placeholder="password" class="w-100 mt-3" id="password">
         <span class="d-inline-flex mt-3 mx-auto align-items-center"><input type="checkbox" class="mx-2" id="staytune"><p class="m-0">Rester connecté </p></span>
         <button class="btn btn-success d-block mx-auto mt-3" id="btnConnexion">Connexion</button>
         <p class="mt-3">Pas encore inscrit ? <a href="#" class="switch">Cliquez-ici</a></p>
@@ -376,6 +376,12 @@ $(document).ready(() => {
                         $('#btnConnexion').click(login)
                         break
                     case 'disconnect':
+                        for (users in userlist) {
+                            if (user.user_ID == userlist[users].user_ID) {
+                                userlist[users] = user
+                                localStorage.setItem('userlist', JSON.stringify(userlist))
+                            }
+                        }
                         localStorage.removeItem('user')
                         location.reload()
                         break
@@ -429,8 +435,6 @@ $(document).ready(() => {
                 $('#userimg').val($(this).attr('src'))
             })
         }
-        
-        
     })
 
 
@@ -1127,12 +1131,12 @@ $(document).ready(() => {
                 if ($('#login').val() == currentuser.pseudo || $('#login').val() == currentuser.mail) {
                     if ($('#password').val() == currentuser.MDP) {
                         connected = true
+                        break
                     }
                 }
             }
         }
         if (connected == true) {
-            user = currentuser
             localStorage.setItem('user', JSON.stringify(currentuser))
             if ($('#staytune').is(':checked')) {
             }

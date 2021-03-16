@@ -180,6 +180,11 @@ main::-webkit-scrollbar-thumb {
     margin-left: 10%;
 }
 
+#playlistimg {
+    width: 325px;
+    height: 325px;
+}
+
 #playlistinfocontainer {
     margin-bottom: 5%;
 }
