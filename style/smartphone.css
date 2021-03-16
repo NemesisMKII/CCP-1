@@ -1,3 +1,12 @@
+html {
+    overflow: hidden;
+}
+
+body {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 .headerwrapper, .footerwrapper {
     height: 13%;
 }
