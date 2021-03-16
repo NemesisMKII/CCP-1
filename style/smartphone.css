@@ -262,7 +262,7 @@ main li {
     flex-direction: column;
     width: 100%;
     margin: 0;
-    color: black;
+    color: black !important;
 }
 
 #searchresult li {
