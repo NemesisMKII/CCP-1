@@ -213,11 +213,11 @@ $(document).ready(() => {
         $('#menupdppicture').attr('src', user.user_image)
         $('.username').html(user.pseudo)
         $('body').show()
+        $('body').css({
+            height: '100vh',
+            width: '100vw'
+        })
 
-        window.onresize = function() {
-            $('body').height() = $('html').height()
-        }
-        
     } else {
         $('body').show()
         $('.headerwrapper').append(pcsearchTEMPLATE)
