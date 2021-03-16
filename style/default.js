@@ -468,13 +468,13 @@ $(document).ready(() => {
         $('#music')[0].volume = $(this).val() / 100
         var volume = $(this).val()
         if (volume >= 75) {
-            $('i.fa').attr('class', 'text-white fa fa-volume-up')
+            $('.volumediv i.fa').attr('class', 'text-white fa fa-volume-up')
         } else if(volume <= 74 && volume >= 26) {
-            $('i.fa').attr('class', 'text-white fa fa-volume')
+            $('.volumediv i.fa').attr('class', 'text-white fa fa-volume')
         } else if (volume <= 25 && volume > 1) {
-            $('i.fa').attr('class', 'text-white fa fa-volume-down')
+            $('.volumediv i.fa').attr('class', 'text-white fa fa-volume-down')
         } else {
-            $('i.fa').attr('class', 'text-white fa fa-volume-mute')
+            $('.volumediv i.fa').attr('class', 'text-white fa fa-volume-mute')
         }
     })
 
