@@ -408,3 +408,11 @@ font-size: 130%;
     top: -12px;
     right: -35px;
 }
+
+.fa-chevron-up {
+    display: none !important;
+}
+
+.fa-arrow-left {
+    font-size: 2em;
+}

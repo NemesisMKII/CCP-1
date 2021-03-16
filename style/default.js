@@ -36,7 +36,7 @@ var logregTEMPLATE = `
     <header class="w-100 h-50 d-flex flex-column">
         <input type="text" placeholder="mail" class="w-100 mt-3" id="usermail">
         <input type="text" placeholder="pseudo" class="w-100 mt-3" id="userpseudo">
-        <input type="text" placeholder="mdp" class="w-100 mt-3" id="usermdp">
+        <input type="paswword" placeholder="mdp" class="w-100 mt-3" id="usermdp">
         <p>Le mot de passe doit contenir 6 caractères min ainsi qu'un de ces caractères suivants:  &#{([-_@)]=+} </p>
         <input type="text" placeholder="Entrez l'URL de l'image..." class="w-100 mt-3" id="userimg">
         <p>...Ou choisissez parmi les images ci-dessous: </p>
@@ -117,6 +117,8 @@ $(document).ready(() => {
         location.reload()
     })
     
+    //This was used to fix viewport shrinking on android whenever the keyboard shows up
+    //Also kind of break viewport when the url bar hides unfortunately, haven't found any fix
     let viewheight = $(window).height();
     let viewwidth = $(window).width();
     let viewport = document.querySelector("meta[name=viewport]");
@@ -169,6 +171,7 @@ $(document).ready(() => {
 
     //Get user from sessionStorage if someone is already connected, or create it and store it in sessionStorage
     //This is in case the user doesn't check "stay connected"
+    //OBSOLETE
     if (!sessionStorage.getItem('user')) {
         var user = {}
         sessionStorage.setItem('user', JSON.stringify(user))
@@ -198,6 +201,13 @@ $(document).ready(() => {
         var lastheards = JSON.parse(localStorage.getItem('lastheards'))
     }
     
+    /*
+    Checks the localStorage for 'user':
+        If empty: 
+            That means there is no user connected
+        else:
+            That means there is an user connected
+    */  
     if (jQuery.isEmptyObject(user)) {
         $('#disconnect').hide()
     } else {
@@ -205,20 +215,27 @@ $(document).ready(() => {
     }
 
     //Detects if user is on a device  other than pc, and if so, applies mobile css on it
-    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) {
+    if (navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi)) { //MOBILE ONLY
         $('#css').after(`
         <!-- CSS style for mobile -->
         <link rel="stylesheet" type="text/css" href="./style/smartphone.css" />
         `)
+        //Add user's username and profile picture
         $('#menupdppicture').attr('src', user.user_image)
         $('.username').html(user.pseudo)
         $('body').show()
-    } else {
+    } else { // PC ONLY
         $('body').show()
+        //Adds searchbar to pc and add connected user's username and profile picture
         $('.headerwrapper').append(pcsearchTEMPLATE)
         $('#username').html(user.pseudo)
         $('#userimage').attr('src', user.user_image)
         $('#searchinput').focus(inputfocus)
+
+        /* 
+        Look below the window.resize function for explanation.
+        Needed here to make things responsive 'out of the ebox'
+        */
         $('.headerwrapper').css({
             'max-width': $('body').width() - $('aside').width()
         })
@@ -231,6 +248,12 @@ $(document).ready(() => {
         })
 
         window.onresize = function() {
+            /* 
+            Resizes main width, header width to make them responsive with <aside> width
+            resizes sound progressbar height to make it responsive with footer height
+
+            Applies whenever the user resizes the window
+            */
             $('.headerwrapper').css({
                 'max-width': $('body').width() - $('aside').width()
             })
@@ -244,12 +267,18 @@ $(document).ready(() => {
         }
     }
 
-    $('footer > *').toggleClass('delaytransition')
+    $('footer > *').toggleClass('delaytransition') // To add some smoothiness to footer to full transition in MOBILE
     var musiccurrentlength = 0
     var ischronoon = false
     paused = true
 
     $('.searchshow').click(() => {
+        /* 
+        FOR MOBILE
+
+        Initiates search function.
+        Show/Hide ther searchbar
+        */
         $('#searchinput').val('')
         if ($('.searchbar').length > 0 && $('.searchwrapper').length > 0) {
             $('.searchbar').toggleClass('heighttoggle')
@@ -272,28 +301,16 @@ $(document).ready(() => {
         })
     })
     
-    function inputfocus() {
-        $.ajax({
-            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-            method: "GET",
-            dataType: "json",
-
-            error: () => {
-                alert('Le chargement de la liste des musiques a échoué.')
-            },
-
-            success: function(data) {
-                var songlist = data.songs
-                $('#searchinput').keyup(() => {
-                    searchresults($('#searchinput').val().toLowerCase(), songlist)
-                    $('#searchresult li').unbind('click')
-                    $('#searchresult li').click(setmusic)
-                })    
-            },
-        })
-    }
+    
 
     $('.drawcontainer ul li').click(function() {
+        /* 
+        CORE OF THE NAV
+
+        Manipulates DOM to show what is need according to navbar items ID (home, musics, etc)
+        Calls whatever function is needed here
+        Uses Ajax to make the musics section great again
+        */
         $('main').empty()
         $('aside').toggleClass('hide')
         if ($(this).attr('id') != 'connect') {
@@ -418,10 +435,20 @@ $(document).ready(() => {
 
 
     $('.menudrawer').click(() => {
+        /* 
+        FOR MOBILE
+
+        Shows aside navbar
+        */
         $('aside').toggleClass('hide')
     })
 
     $('aside').click(function(e) {
+        /* 
+        FOR MOBILE
+
+        Used to hide the aside navbar when clicked outside.
+        */
         if (e.target !== this) {
             return
         } else {
@@ -430,6 +457,10 @@ $(document).ready(() => {
     })
 
     $('.soundprogress').on('input',function() {
+        /* 
+        Progressbar for sound
+        little sound icon changes when sound value >= 75, <= 74 & >=26, <= 25 & > 1, and finally when value is 0
+        */
         $('#music')[0].volume = $(this).val() / 100
         var volume = $(this).val()
         if (volume >= 75) {
@@ -444,6 +475,10 @@ $(document).ready(() => {
     })
 
     $('.progress').click(function(event) {
+        /* 
+        Gets the pos of the mouse inside the music length bar div,
+        Magic maths to set music time AND progressbar value to jump at certains points of the music.
+        */
         var posX = event.pageX - $(this).offset().left
         $(this).children(1).css({
             width: ((posX / $(this).css('width').split('px')[0])*100) + "%"
@@ -451,11 +486,8 @@ $(document).ready(() => {
         $('#music')[0].currentTime = $('#music')[0].duration * (posX / $(this).css('width').split('px')[0])
     })
 
-    $('.muteBtn').click(() => {
-        alert('click')
-    })
-
     $('.play').click(() => {
+        // call play(pause)
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -464,6 +496,7 @@ $(document).ready(() => {
     })
 
     $('.forwards').click(() => {
+        // call changetrack(counter)
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -472,6 +505,7 @@ $(document).ready(() => {
     })
 
     $('.backwards').click(() => {
+        // call changetrack(counter)
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -481,6 +515,20 @@ $(document).ready(() => {
 
     $('.musicfull i.fa-headphones').click(addtoplaylist)
 
+    $('.footerwrapper footer').click(function(e) {
+        /* 
+        Shows the fullscreen audio player (only in mobile)
+        */
+        if (e.target !== this && !$(e.target).hasClass('fa-chevron-up')) {
+            return
+        } else {
+            $('footer > *').toggleClass('delaytransition')
+            $('.musicfull').toggleClass('delaytransition')
+            $('footer > *').toggleClass('footerhide')
+            $('.musicfull').toggleClass('musicfullhide')
+        }
+    })
+
     /* ////////////////////////////////////////
     ///////////////////////////////////////////
     ///////////////////////////////////////////
@@ -489,7 +537,32 @@ $(document).ready(() => {
     ///////////////////////////////////////////
     /////////////////////////////////////////// */
 
+    function inputfocus() {
+        $.ajax({
+            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+            method: "GET",
+            dataType: "json",
+
+            error: () => {
+                alert('Le chargement de la liste des musiques a échoué.')
+            },
+
+            success: function(data) {
+                var songlist = data.songs
+                $('#searchinput').keyup(() => {
+                    searchresults($('#searchinput').val().toLowerCase(), songlist)
+                    $('#searchresult li').unbind('click')
+                    $('#searchresult li').click(setmusic)
+                })    
+            },
+        })
+    }
+
     function setlastheards(musicID) {
+        //Whenever a music is played, add this music to an array saved in localstorage
+        //This function is used to show the user the last songs he played.
+        //The array is limited to 4 due to actual placement and css used,
+        //But it can be changed to whatever number, the array will work, but my css is obsolete and cannot run these well
         var same = false
         for (item in lastheards) {
             if (lastheards[item] == musicID) {
@@ -508,6 +581,8 @@ $(document).ready(() => {
     }
 
     function appendlastheards() {
+        //This function is used to append main thanks to Ajax request and a for iteration.
+        //For each id stored in lastheards array in localstorage, it scans the JSON and append main with corresponding songs
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
             method: "GET",
@@ -537,6 +612,13 @@ $(document).ready(() => {
     }
 
     function playlistpage() {
+        /*
+        This function is used to show playlist page,
+        for each playlist in the locastorage it appends it in the main
+        If there's no song in the playlist (no songs by default on creation)
+        Then a default album cover is used.
+        If there's songs in the playlist, then the playlist cover will be the photo of the first song. 
+        */
         $.ajax({
             url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
             method: "GET",
@@ -574,7 +656,14 @@ $(document).ready(() => {
         
     }
 
+    
     function showplaylist() {
+        /*
+        function used to show the songs inside of a playlist,
+        Uses Ajax request to scan and get the corresponding songs using their ID
+        If a song ID matches the ID in a playlist, the song is added along other songs
+        in the list. 
+        */
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -652,7 +741,14 @@ $(document).ready(() => {
         }
     }
 
+    
     function addtoplaylist() {
+        /*  
+        Opens a modal to add a song to a playlist.
+        Scans the playlists to see if the chosen song is already in there or not.
+        If it is, the text "ajouter" will be changed to "ajoutée !" and on click, it removes the
+        song from the playlist selected.
+        */
         var music = $($(this).parent().parent()[0]).attr('id')
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
@@ -709,7 +805,13 @@ $(document).ready(() => {
         }
     }
 
+    
     function checkheartfavorite() {
+        /*
+        Scans the song list to see if there is any song already liked.
+        If a song has already been liked before, then it changes the class 
+        of the 'fa-heart' element 
+        */
         for (var song = 0; song < $($('#songlist').children()).length; song++) {
             var currentsong = $($('#songlist').children()[song])
             var heartitem = $(currentsong.children().children('i.fa-heart')[0])
@@ -723,6 +825,11 @@ $(document).ready(() => {
     }
 
     function heartfavorite() {
+        /* 
+        on click on a heart, check if weither or not the song has been liked by the user.
+        If not, pushes the song ID into the user.favorites
+        If yes, removes the song ID from the user.favorites
+        */
         var isliked = false
         var songID = $($(this).parent().parent()[0]).attr('id')
         if ($(this).hasClass('far')) {
@@ -748,19 +855,20 @@ $(document).ready(() => {
         localStorage.setItem('user', JSON.stringify(user))
     }
 
-    $('.footerwrapper footer').click(function(e) {
-        if (e.target !== this) {
-            return
-        } else {
-            $('footer > *').toggleClass('delaytransition')
-            $('.musicfull').toggleClass('delaytransition')
-            $('footer > *').toggleClass('footerhide')
-            $('.musicfull').toggleClass('musicfullhide')
-        }
-    })
-
     function searchresults(searchitem, datasongs) {
-        //Function used in Ajax Request
+        /*
+        Function used in Ajax Request
+        Function used in search bar focus:
+            Each time the value changes, it calls this function to dynamically
+            show results.
+
+        Uses Mother Fuckin' Regex:
+            For each letter typed, a new regex is created, containing:
+                (?: $('#searchinput).val() )
+                targets group of letters, wherever they are in a string.
+
+        Would have been easy if I hadn't searched a day long for a damn regex that finally is only 4 characters long.
+        */
         $('#searchresult').empty()
         var searchresponselist = []
         var searchregex = "(?:"
@@ -801,6 +909,16 @@ $(document).ready(() => {
     }
 
     function play(pause) {
+        /* 
+        Well, it is what it is.
+
+        Play, pause the music,
+        When played, an interval is set each second:
+            gets the currenttime of the music
+            uses MATHS to calculate the width of the progressbar corresponding to music
+            modifies progressbar CSS
+            not the smoothest, but that's ok
+        */
         if (ischronoon) {
             clearInterval(chrono)
         }
@@ -832,9 +950,14 @@ $(document).ready(() => {
     }
     
     function setmusic(e) {
+        /*
+        Guess what it is used for
+
+        Uses Ajax to get the music supposed to play thanks to the music ID injected in $('#songlist)
+        Simple.
+
+        */
         var music = $(this).attr('id')
-        console.log($(e.target).data('id'))
-        console.log($(this).attr('id'));
         if (jQuery.isEmptyObject(user)) {
             alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
@@ -885,6 +1008,15 @@ $(document).ready(() => {
     }
 
     function changetrack(counter) {
+        /* 
+        Changes tracks.
+
+        Well, what to you expect me to say ?
+
+        Uses a counter set up in the $('#backwards') (-1) and $('#forwards') (+1)
+        Besides that, works the same as setmusic()
+        (was supposed to look for a solution needing less lines, but, hey, at least it works)
+        */
         musiccurrentlength = 0
         var songID = $('#music').data('id')
         $.ajax({
@@ -927,6 +1059,10 @@ $(document).ready(() => {
     }
 
     function getmusiclength(duration, counter = null) {
+        /* 
+        Uses duration parameter that can be current length as well as total length.
+        Uses magic to return it as 00:00 (min : sec)
+        */
         var secs = Math.round(duration)
         var mins = parseInt(secs / 60)
         secs = secs % 60
@@ -934,11 +1070,17 @@ $(document).ready(() => {
     }
     
     function logregswitch() {
+        // Nintendo 
         $('#connexion').toggle()
         $('#inscription').toggle()
     }
 
     function register(e) {
+        /* 
+        Function uses to add an user to the "database"
+        checks val()'s, if any's empty return an error
+        else, use regex to ensure that password and mail is writed correctly 
+        */
         e.preventDefault()
         if (!$('#usermail').val() || !$('#userpseudo').val() || !$('#usermdp').val() || !$('#userimg').val()) {
             alert('remplissez les champs')
@@ -961,15 +1103,21 @@ $(document).ready(() => {
                     location.reload(
                     )
                 } else {
-                    alert('mdp pas ok')
+                    alert('Le mot de passe ne respecte pas les conditions demandées !')
                 }
             } else {
-                alert("mail pas ok")
+                alert("L'adresse mail ne respecte pas les onditions demandées !")
             }
         }
     }
 
     function login(e) {
+        /* 
+        Function that pushes an user to the localstorage
+        Was supposed to work with sessionstorage, explains the presence of that useless checkbox
+        Lack of time, and more important things to work on this project.
+        */
+        connected = false
         e.preventDefault()
         if (!$('#login').val() || !$('#password').val()) {
             alert('Identifiants/mot de passe incorrects.')
@@ -978,22 +1126,26 @@ $(document).ready(() => {
                 currentuser = userlist[users]
                 if ($('#login').val() == currentuser.pseudo || $('#login').val() == currentuser.mail) {
                     if ($('#password').val() == currentuser.MDP) {
-                        user = currentuser
-                        localStorage.setItem('user', JSON.stringify(currentuser))
-                        if ($('#staytune').is(':checked')) {
-                        }
-                        location.reload()
-                    } else {
-                        alert('Identifiants/mot de passe incorrects')
+                        connected = true
                     }
-                } else {
-                    alert('Identifiants/mot de passe incorrects')
                 }
             }
+        }
+        if (connected == true) {
+            user = currentuser
+            localStorage.setItem('user', JSON.stringify(currentuser))
+            if ($('#staytune').is(':checked')) {
+            }
+            location.reload()
+        } else {
+            alert('Identifiants/mot de passe incorrects.')
         }
     }
 
     function uuidv4() {
+        /* 
+        Returns an ID
+        */
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
           var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);

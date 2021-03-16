@@ -408,6 +408,19 @@ footer .progress {
     transform: translateY(-100%);
 }
 
+.fa-chevron-up {
+    display: block !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: white;
+    font-size: 2em;
+    margin-right: 1%;
+}
+
+.fa-arrow-left {
+    font-size: 2em;
+}
 
 
 /* /////////////////////// CSS Agrandissement lecteur //////////////////////////
