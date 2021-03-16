@@ -1,3 +1,11 @@
+/* ///////////////////////////////////
+//////////////////////////////////////
+//////////////////////////////////////
+//////////////TEMPLATES///////////////
+//////////////////////////////////////
+//////////////////////////////////////
+////////////////////////////////////// */
+
 var homeTEMPLATE = `
 <div class="pageIntro">
     <h1 class="text-center">Bienvenue sur Spotinein, Mein petit Frolhein !</h1>
@@ -29,6 +37,7 @@ var logregTEMPLATE = `
         <input type="text" placeholder="mail" class="w-100 mt-3" id="usermail">
         <input type="text" placeholder="pseudo" class="w-100 mt-3" id="userpseudo">
         <input type="text" placeholder="mdp" class="w-100 mt-3" id="usermdp">
+        <p>Le mot de passe doit contenir 6 caractères min ainsi qu'un de ces caractères suivants:  &#{([-_@)]=+} </p>
         <input type="text" placeholder="Entrez l'URL de l'image..." class="w-100 mt-3" id="userimg">
         <p>...Ou choisissez parmi les images ci-dessous: </p>
         <div class="imgcontainer">
@@ -103,10 +112,11 @@ var pcsearchTEMPLATE = `
 `
 
 $(document).ready(() => {
+    //Click on logo makes your way back to home.
     $('#spotinein').click(() => {
         location.reload()
     })
-    console.log(jQuery.isEmptyObject(user));
+    
     let viewheight = $(window).height();
     let viewwidth = $(window).width();
     let viewport = document.querySelector("meta[name=viewport]");
@@ -203,6 +213,11 @@ $(document).ready(() => {
         $('#menupdppicture').attr('src', user.user_image)
         $('.username').html(user.pseudo)
         $('body').show()
+
+        window.onresize = function() {
+            $('body').height() = $('html').height()
+        }
+        
     } else {
         $('body').show()
         $('.headerwrapper').append(pcsearchTEMPLATE)
@@ -328,8 +343,8 @@ $(document).ready(() => {
                                                 ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
                                                 <p>${data.songs[item].artist}</p>
                                             </div>
-                                            <i class="far fa-headphones ms-auto"></i>
-                                            <i class="far fa-heart"></i>
+                                            <i class="far fa-headphones ms-auto" data-id="${data.songs[item].id}"></i>
+                                            <i class="far fa-heart" data-id="${data.songs[item].id}"></i>
                                         </div>
                                     </li>
                                     `)
@@ -374,8 +389,8 @@ $(document).ready(() => {
                                                     ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
                                                     <p>${datasongs[item].artist}</p>
                                                 </div>
-                                                <i class="far fa-headphones ms-auto"></i>
-                                                <i class="far fa-heart"></i>
+                                                <i class="far fa-headphones ms-auto" data-id="${datasongs[item].id}"></i>
+                                                <i class="far fa-heart" data-id="${datasongs[item].id}"></i>
                                             </div>
                                         </li>
                                         `)
@@ -565,78 +580,81 @@ $(document).ready(() => {
     }
 
     function showplaylist() {
-        var currentplaylistID = $(this).data('id')
-        for (playlist in playlists) {
-            if (currentplaylistID == playlists[playlist].playlist_ID) {
-                var currentplaylist = playlists[playlist]
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
+        } else {
+            var currentplaylistID = $(this).data('id')
+            for (playlist in playlists) {
+                if (currentplaylistID == playlists[playlist].playlist_ID) {
+                    var currentplaylist = playlists[playlist]
+                }
             }
-        }
-        $('main').fadeOut()
-        $.ajax({
-            url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-            method: "GET",
-            dataType: "json",
-
-            error: () => {
-                alert('Erreur lors du chargement des musiques.')
-            },
-
-            success: function(data) {
-                var songlist = data.songs
-                setTimeout(() => {
-                    $('main').empty()
-                    $('main').append(showplaylistTEMPLATE)
-                    $('#playlistinfocontainer h1').html(currentplaylist.playlist_name)
-                    if (currentplaylist.songs.length == 0) {
-                        $('#playlistimg').attr('src', 'https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg')
-                    } else {
-                        for (songs in songlist) {
-                            if (currentplaylist.songs[0] == songlist[songs].id) {
-                                $('#playlistimg').attr('src', songlist[songs].image)
-                            }
-                        }
-                    }
-                    if (currentplaylist.songs.length == 0) {
-                        $('#playlistinfocontainer').after(`
-                        <h1 class="mt-5 text-center">Cette playlist est vide.</h1>
-                        `)
-                    } else {
-                        for (songID in currentplaylist.songs) {
-                            var currentsongID = currentplaylist.songs[songID]
-                            for(item in songlist) {
-                                var datasong = songlist[item]
-                                if (currentsongID == datasong.id) {
-                                    $('#songlist').append(`
-                                    <li id="${data.songs[item].id}">
-                                        <div class="d-flex align-items-center">
-                                            <img src="${data.songs[item].image}" class="musicimg" alt="" />
-                                            <div class="music-info">
-                                                <p class="listsongname">${data.songs[item].name}</p>
-                                                ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
-                                                <p>${data.songs[item].artist}</p>
-                                            </div>
-                                            <i class="far fa-headphones ms-auto"></i>
-                                            <i class="far fa-heart"></i>
-                                        </div>
-                                    </li>
-                                    `)
+            $('main').fadeOut()
+            $.ajax({
+                url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                method: "GET",
+                dataType: "json",
+    
+                error: () => {
+                    alert('Erreur lors du chargement des musiques.')
+                },
+    
+                success: function(data) {
+                    var songlist = data.songs
+                    setTimeout(() => {
+                        $('main').empty()
+                        $('main').append(showplaylistTEMPLATE)
+                        $('#playlistinfocontainer h1').html(currentplaylist.playlist_name)
+                        if (currentplaylist.songs.length == 0) {
+                            $('#playlistimg').attr('src', 'https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg')
+                        } else {
+                            for (songs in songlist) {
+                                if (currentplaylist.songs[0] == songlist[songs].id) {
+                                    $('#playlistimg').attr('src', songlist[songs].image)
                                 }
                             }
                         }
-                        $('#songlist li').click(setmusic)
-                        
-                        checkheartfavorite()
-                        $('#songlist i.fa-heart').click(heartfavorite)
+                        if (currentplaylist.songs.length == 0) {
+                            $('#playlistinfocontainer').after(`
+                            <h1 class="mt-5 text-center">Cette playlist est vide.</h1>
+                            `)
+                        } else {
+                            for (songID in currentplaylist.songs) {
+                                var currentsongID = currentplaylist.songs[songID]
+                                for(item in songlist) {
+                                    var datasong = songlist[item]
+                                    if (currentsongID == datasong.id) {
+                                        $('#songlist').append(`
+                                        <li id="${data.songs[item].id}">
+                                            <div class="d-flex align-items-center">
+                                                <img src="${data.songs[item].image}" class="musicimg" alt="" />
+                                                <div class="music-info">
+                                                    <p class="listsongname">${data.songs[item].name}</p>
+                                                    ${navigator.userAgent.match(/ipad|android|phone|ios|iphone/gi) ? '' : '<p>|</p>'}
+                                                    <p>${data.songs[item].artist}</p>
+                                                </div>
+                                                <i class="far fa-headphones ms-auto" data-id="${data.songs[item].id}"></i>
+                                                <i class="far fa-heart" data-id="${data.songs[item].id}"></i>
+                                            </div>
+                                        </li>
+                                        `)
+                                    }
+                                }
+                            }
+                            $('#songlist li').click(setmusic)
+                            
+                            checkheartfavorite()
+                            $('#songlist i.fa-heart').click(heartfavorite)
+                        }
+                        $('i.fa-arrow-left').click(() => {
+                            $('main').empty()
+                            playlistpage()
+                        })
+                    }, 400)
+                    setTimeout($('main').fadeIn(), 1000)
                     }
-                    $('i.fa-arrow-left').click(() => {
-                        $('main').empty()
-                        playlistpage()
-                    })
-                }, 400)
-                setTimeout($('main').fadeIn(), 1000)
-                }
-        })
-        
+            })
+        }
     }
 
     function addtoplaylist() {
@@ -820,47 +838,53 @@ $(document).ready(() => {
     
     function setmusic(e) {
         var music = $(this).attr('id')
-        if (e.target == $('.fa-heart')[music -1] || e.target == $('.fa-headphones')[music -1]) {
+        console.log($(e.target).data('id'))
+        console.log($(this).attr('id'));
+        if (jQuery.isEmptyObject(user)) {
+            alert('Connectez-vous pour utiliser cette fonctionnalité')
         } else {
-            if ($(this).attr('id') != $('#music').attr('data-id')) {
-                musiccurrentlength = 0
-                var songID = $(this).attr('id')
-                $.ajax({
-                    url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
-                    method: "GET",
-                    dataType: "json",
-            
-                    error: function() {
-                        alert('le chargement de la liste des musiques a échoué')
-                    },
-            
-                    success: function(data) {
-                        musiccurrentlength = 0
-                        for (item in data.songs) {
-                            var currentsong = data.songs[item]
-                            if (currentsong.id == songID) {
-                                $('.musictitle').html(currentsong.name)
-                                $('.artistname span').html(currentsong.artist)
-                                $('#music').attr('src', currentsong.song)
-                                $('#music').attr('data-id', currentsong.id)
-                                $('.songimg').attr('src', currentsong.image)
-                                $('#music')[0].onloadedmetadata = () => {
-                                    var musictotallength = getmusiclength($('#music')[0].duration)
-                                    $('.currentlength').empty()
-                                    $('.currentlength').append(getmusiclength(musiccurrentlength))
-                                    $('.totalength').empty()
-                                    $('.totalength').append(musictotallength)
-                                    $('.progress div').css({
-                                        width: 0
-                                    })
-                                    setlastheards(music)
+            if ($(e.target).data('id') == $(this).attr('id')) {
+            } else {
+                if ($(this).attr('id') != $('#music').attr('data-id')) {
+                    musiccurrentlength = 0
+                    var songID = $(this).attr('id')
+                    $.ajax({
+                        url: "https://raw.githubusercontent.com/NemesisMKII/CCP-1/master/data/jsonMusique.json",
+                        method: "GET",
+                        dataType: "json",
+                
+                        error: function() {
+                            alert('le chargement de la liste des musiques a échoué')
+                        },
+                
+                        success: function(data) {
+                            musiccurrentlength = 0
+                            for (item in data.songs) {
+                                var currentsong = data.songs[item]
+                                if (currentsong.id == songID) {
+                                    $('.musictitle').html(currentsong.name)
+                                    $('.artistname span').html(currentsong.artist)
+                                    $('#music').attr('src', currentsong.song)
+                                    $('#music').attr('data-id', currentsong.id)
+                                    $('.songimg').attr('src', currentsong.image)
+                                    $('#music')[0].onloadedmetadata = () => {
+                                        var musictotallength = getmusiclength($('#music')[0].duration)
+                                        $('.currentlength').empty()
+                                        $('.currentlength').append(getmusiclength(musiccurrentlength))
+                                        $('.totalength').empty()
+                                        $('.totalength').append(musictotallength)
+                                        $('.progress div').css({
+                                            width: 0
+                                        })
+                                        setlastheards(music)
+                                    }
+                                    paused = true
+                                    play(paused)
                                 }
-                                paused = true
-                                play(paused)
                             }
                         }
-                    }
-                })
+                    })
+                }
             }
         }
     }
@@ -959,11 +983,9 @@ $(document).ready(() => {
                 currentuser = userlist[users]
                 if ($('#login').val() == currentuser.pseudo || $('#login').val() == currentuser.mail) {
                     if ($('#password').val() == currentuser.MDP) {
-                        alert('Connecté !')
                         user = currentuser
                         localStorage.setItem('user', JSON.stringify(currentuser))
                         if ($('#staytune').is(':checked')) {
-                            alert('check !')
                         }
                         location.reload()
                     } else {
