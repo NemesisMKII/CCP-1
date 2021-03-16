@@ -36,7 +36,7 @@ var logregTEMPLATE = `
     <header class="w-100 h-50 d-flex flex-column">
         <input type="text" placeholder="mail" class="w-100 mt-3" id="usermail">
         <input type="text" placeholder="pseudo" class="w-100 mt-3" id="userpseudo">
-        <input type="paswword" placeholder="mdp" class="w-100 mt-3" id="usermdp">
+        <input type="password" placeholder="mdp" class="w-100 mt-3" id="usermdp">
         <p>Le mot de passe doit contenir 6 caractères min ainsi qu'un de ces caractères suivants:  &#{([-_@)]=+} </p>
         <input type="text" placeholder="Entrez l'URL de l'image..." class="w-100 mt-3" id="userimg">
         <p>...Ou choisissez parmi les images ci-dessous: </p>
