@@ -4,6 +4,12 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-y: hidden;
+    background-color: rgb(41, 37, 37);
+}
+
+.fa-heart, .fa-headphones {
+    font-size: 1.7em;
+    margin-right: 1%;
 }
 
 body {
@@ -28,24 +34,78 @@ header {
     z-index: 10;
 }
 
+
 aside {
+    background-color: rgb(41, 37, 37);
     width: 17%;
-    min-width: 250px;
+    min-width: 200px;
     height: 87%;
-    border: 1px solid black;
     position: fixed;
     left: 0;
     top: 0;
     z-index: 10;
+    color: white;
+    border-right: 1px solid rgb(90, 86, 86);;
+}
+
+#spotinein {
+    width: 200px;
+    height: 150px;
+    display: flex;
+    margin: auto;
+    align-self: center;
+}
+
+.asidediv {
+    height: 100%;
+}
+
+.drawheader {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    border-bottom: 1px solid rgb(90, 86, 86);
+}
+
+.drawheader h3 {
+    display: none !important;
+}
+
+.drawcontainer {
+    height: 75%;
+}
+
+.drawcontainer ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawcontainer ul li {
+    height: 30px;
+    border-bottom: 1px solid rgb(90, 86, 86);
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+#disconnect {
+    margin-top: auto;
+}
+
+#menupdppicture {
+    display: none;
 }
 
 main {
-    height: 82%;
+    height: 84%;
     margin-left: 17%;
     overflow-y: scroll;
     width: 83%;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    color: white;
+    background-color: rgb(41, 37, 37);
 }
 
 main::-webkit-scrollbar {
@@ -56,25 +116,124 @@ main::-webkit-scrollbar-thumb {
     background: rgb(63, 58, 58);
 }
 
+.imgcontainer {
+    width: 100%;
+}
+
+.imglist {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.imgcontainer img {
+    width: 150px;
+    height: 150px;
+}
+
+.pageIntro {
+    width: 100%;
+    border-bottom: 1px solid rgb(90, 86, 86);;
+    height: 35%;
+}
+
+#textdiv {
+    width: 65%;
+    margin: 5% 10%;
+    font-size: 1.5em;
+    line-height: 50%;
+}
+
+.lastheardcontainer {
+    width: 100%;
+    height: 35%;
+}
+
+.lastheardcontainer .scrollable {
+    display: flex;
+    flex-direction: row;
+}
+
+.lastheardObject {
+    width: 200px;
+    height: 225px;
+    border: 1px solid rgb(90, 86, 86);;
+}
+
+.lastheardObject img {
+    width: 100%;
+    height: 100%;
+}
+
+#songinfobar {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(90, 86, 86);;
+}
+
+.listsongname {
+    width: 40%;
+}
+
+#songinfobar p {
+    margin-bottom: 0;
+    margin-left: 10%;
+}
+
+#playlistinfocontainer {
+    margin-bottom: 5%;
+}
+
+.playlistscontainer {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.playlistscontainer::-webkit-scrollbar {
+    width: 5px;
+}
+
+.playlistObject {
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    margin-bottom: 10%;
+}
+
+.playlistObject img {
+    width: auto;
+    height: 100%;
+}
+
 footer {
     min-height: 65px;
     height: 13%;
     width: 100%;
-    background-color: rgb(41, 37, 37);
+    background-color: rgb(133, 40, 40);
     z-index: 10;
     bottom: 0;
 }
+
 footer img {
     max-width: 165px;
     max-height: 90%;
+    align-self: center;
 }
 
-#progress {
+.progress {
     height: 3px;
     background-color: grey;
 }
 
-#progress div {
+.progress:hover {
+    height: 10px;
+    cursor: pointer;
+}
+
+.progress div {
     background-color: white;
     height: 100%;
 }
@@ -86,13 +245,52 @@ footer img {
 .headerwrapper {
     width: 83%;
     float: right;
-    border: 1px solid black;
+    border: 1px solid rgb(90, 86, 86);;
     height: 5%;
+    background-color: rgb(41, 37, 37);;
+}
+
+#username {
+    color: white;
+    margin: 0;
+    margin-right: 1%;
+}
+
+#userimage {
+    color: white;
+    margin-left: auto;
+    margin-right: 15px;
+    width: 30px;
+    height: 30px;
+}
+
+.searchwrapper {
+    max-height: 1000%;
+}
+
+#searchdiv {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+#searchdiv::-webkit-scrollbar {
+    display: none;
+    width: 10px;
+    background-color: white;
+}
+
+#searchdiv::-webkit-scrollbar-thumb {
+    background-color: rgb(180, 79, 79);
+}
+
+#searchdiv:hover::-webkit-scrollbar {
+    display: block;
 }
 
 .fa-search {
     font-size: 2rem;
     margin-left: 1%;
+    color: rgba(245, 245, 245, 0.486);
 }
 
 .searchbar {
@@ -105,6 +303,8 @@ footer img {
     border: transparent;
     z-index: 10;
     margin-left: 1%;
+    background-color: rgb(41, 37, 37);
+    color: whitesmoke;
 }
 
 #searchinput:focus {
@@ -120,7 +320,7 @@ footer img {
     display: flex;
     font-size: 1.5rem;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid rgb(90, 86, 86);
 }
 
 #searchresult li img {
@@ -137,6 +337,82 @@ footer img {
 
 .playbar {
     top: 15%;
-    width: 300px;
-    transform: translateX(-50%);
+    width: 600px;
+    margin-left: -300px;
+}
+
+.playbar p {
+    display: block !important;
+}
+
+.soundprogress {
+    -webkit-appearance: slider-vertical;
+    width: 20px;
+    max-height: 100px;
+}
+
+.volumediv {
+    position: absolute;
+    right: 1%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.textcontainer {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-left: 0.5%;
+}
+
+.artistname {
+font-size: 80%;
+}
+
+.musictitle {  
+font-size: 130%;
+}
+
+#songlist li {
+    height: 60px;
+    border-bottom: 1px solid rgb(90, 86, 86);;
+}
+
+#songlist li p  {
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+#songlist li div {
+    height: inherit;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    width: 100%;
+}
+
+#songlist img {   
+    width: 50px;
+    height: 50px;
+}
+
+.currentlength {
+    display: block;
+    position: absolute;
+    top: -12px;
+    left: -35px;
+}
+
+.totalength {
+    display: block;
+    position: absolute;
+    top: -12px;
+    right: -35px;
+}
+
+.fa-chevron-up {
+    display: none !important;
+}
+
+.fa-arrow-left {
+    font-size: 2em;
 }

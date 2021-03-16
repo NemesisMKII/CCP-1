@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>titre</title>
+        <title>Spotinein</title>
         <!-- Bootstrap 5.0.0-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" 
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -27,13 +27,15 @@
         <aside>
             <div class="asidediv">
                 <div class="drawheader">
-                    <img class="w-25" src="https://p5.storage.canalblog.com/56/05/74726/6033585.jpg" id="menupdppicture">
-                    <h3 class="text-center w-75">Nom prénom</h3>
+                    <img src="data/spotinein_logo.png" id="spotinein">
+                    <img class="w-25" src="" id="menupdppicture">
+                    <h3 class="text-center text-white w-75 username"></h3>
                 </div>
                 <div class="drawcontainer">
                     <ul>
                         <li id="home">Accueil</li>
-                        <li id="playlists">Playlist</li>
+                        <li id="musics">Musiques</li>
+                        <li id="playlists">Playlists</li>
                         <li id="favorites">Favoris</li>
                         <li id="connect">Connexion</li>
                         <li id="disconnect">Se déconnecter</li>
@@ -42,39 +44,23 @@
             </div> 
         </aside>
         <main>
+            <div class="pageIntro">
+                <h1 class="text-center">Bienvenue sur Spotinein, Mein petit Frolhein !</h1>
+                <div id="textdiv">
+                    <p>Izi tu peux t'adonner à tous tes petits plaisirs ... musicaux !</p>
+                    <p>Commence donc par t'inscrire mein petit ... et n'oublie pas</p>
+                    <p>ça restera notre petit secret !</p>
+                </div>
+            </div>
+            <h1 class="m-3 lastheardtitles">Derniers titres écoutés</h1>
+            <div class="lastheardcontainer">
+                <div class="scrollable"></div>
+            </div>
         </main>
-        <!-- Lecteur mp3 -->
-        <!-- 
-            <div class="footerwrapper position-relative">
-            <footer class="w-100 position-fixed bottom-0 d-flex justify-content-between">
-                <div class="d-inline-flex">
-                    <img src="https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg" class="m-2" id="songimg">
-                    <p class="m-1 text-white align-self-lg-end" id="musictitle">titre musique</p>
-                    <p class="m-1 text-white" id="artistname"><span>Artiste</span></p>
-                </div>
-                <div class="position-absolute mt-4" id="playbar">
-                    <div id="progress">
-                        <div></div>
-                    </div>
-                    <div class="d-flex justify-content-center mt-3">
-                        <i class="fas fa-step-backward text-white mx-4" id="backwards"></i>
-                        <i class="fas fa-play text-white mx-4" id="play"></i>
-                        <i class="fas fa-step-forward text-white mx-4" id="forwards"></i>
-                    </div>
-                </div>
-                <div class="d-inline-flex align-self-end" id="sound">
-                    <i class="fas fa-volume-mute text-white align-self-center" class="muteBtn"></i>
-                    <div class="align-self-center m-2" id="soundprogress">
-                        <div></div>
-                    </div>
-                </div>
-            </footer>
-        </div>
-        -->
         <div class="footerwrapper position-relative">
-            <footer class="w-100 position-fixed bottom 0">
-                <span class="imgalign"></span><img src="https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg" alt="error !" class="songimg">
-                <div class="position-absolute textcontainer">
+            <footer class="w-100 position-fixed bottom 0 d-flex">
+                <span class="imgalign"></span><img src="https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg" alt="error !" class="songimg">
+                <div class="textcontainer">
                     <p class="m-0 text-white musictitle"></p>
                     <p class="m-0 text-white artistname"><span></span></p>
                 </div>
@@ -87,16 +73,21 @@
                         <i class="fas fa-play text-white mx-4 play"></i>
                         <i class="fas fa-step-forward text-white mx-4 forwards" data-value="1"></i>
                     </div>
+                    <p class="text-white">
+                        <span class="currentlength"></span>
+                        <span class="totalength"></span>
+                    </p>
                 </div>
-                <div class="d-inline-flex volumediv">
+                <div class="volumediv">
                     <i class="fa fa-volume text-white"></i>
                     <input type="range" min="0" max="100" value="50" class="soundprogress">
                 </div>
+                <i class="fa fa-chevron-up"></i>
             </footer>
         </div>
         
         <div class="musicfull position-absolute">
-            <img src="https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg" alt="error !" class="songimg">
+            <img src="https://millennialdiyer.com/wp1/wp-content/uploads/2018/11/Tips-Tricks-for-Assigning-Album-Cover-Art-to-your-Music-Library-Default-Image.jpg" alt="error !" class="songimg">
             <div class="position-absolute textcontainer">
                 <p class="m-0 text-white musictitle"></p>
                 <p class="m-0 text-white artistname"><span></span></p>
@@ -114,11 +105,9 @@
                     <i class="fas fa-step-forward text-white mx-4 forwards" data-value="1"></i>
                 </div>
             </div>
-            <i class="far fa-headphones text-white position-absolute start-0 bottom-0 m-3 mb-5"></i>
-            <i class="far fa-heart text-white position-absolute end-0 bottom-0 m-3 mb-5"></i>
         </div>
         
-        <audio src="https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/912/young-wild-free-1614333632-xGqBA20Zwl.mp3" preload="metadata" data-id="1" id="music">
+        <audio src="" preload="metadata" data-id="0" id="music">
         </audio>
 
         <div class="textbox">

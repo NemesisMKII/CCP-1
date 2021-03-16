@@ -1,5 +1,18 @@
+html {
+    overflow: hidden;
+}
+
+body {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 .headerwrapper, .footerwrapper {
     height: 13%;
+}
+
+#spotinein {
+    display: none;
 }
 
 .heighttoggle {
@@ -14,7 +27,11 @@ footer div.volumediv {
     width: 100%;
     height: 13%;
     left: 0;
-    background-color: rgb(87, 77, 77);
+    background-color: rgb(41, 37, 37);
+}
+
+.headerwrapper header {
+    max-width: 100% !important;
 }
 
 .menudrawer {
@@ -24,6 +41,7 @@ footer div.volumediv {
     vertical-align: middle;
     left: 5%;
     transform: translateY(-50%);
+    color: white;
 }
 
 .searchshow {
@@ -67,6 +85,7 @@ aside {
     transition: transform 0.5s;
     left: -100%;
     border: transparent;
+    background: transparent;
 }
 
 .hide {
@@ -79,10 +98,11 @@ aside {
     background-color: white;
     border: 1px solid black;
     z-index: 13;
+    background-color: rgb(41, 37, 37);
 }
 
-
 #menupdppicture {
+    display: block;
     width: 75px;
     height: 75px;
 }
@@ -95,6 +115,10 @@ aside {
 
 .drawheader img {
     margin-left: 10px;
+}
+
+.drawheader h3 {
+    display: block !important;
 }
 
 .drawcontainer {
@@ -130,11 +154,70 @@ main {
     overflow-y: scroll;
 }
 
+.fa-heart, .fa-headphones {
+    font-size: 0.8em;
+    margin-right: 3%;
+}
+
+#textdiv {
+    width: 100%;
+}
+
+.pageIntro {
+    display: none;
+}
+
+.pageIntro p {
+    font-size: 0.5em;
+    line-height: 0.5em;
+}
+
+.lastheardcontainer {
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+}
+
+.lastheardcontainer .scrollable {
+    width: 150%;
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.lastheardObject {
+    width: 100px;
+    height: 150px;
+    border: 1px solid rgb(90, 86, 86);
+}
+
+.lastheardObject img {
+    width: 100%;
+    height: 100%;
+}
+
 main li {
     border: 1px solid black;
     width: 100%;
     height: 50px;
     font-size: 1.7em;
+}
+
+#inscription {
+    width: 75% !important;
+}
+
+#inscription header {
+    margin: auto;
+}
+
+.imglist, .imgcontainer {
+    width: 100%;
+}
+
+.imglist img {
+    width: 85px;
+    height: 85px;
 }
 
 .musicimg {
@@ -250,6 +333,10 @@ footer {
     overflow: hidden;
 }
 
+footer .currentlength, footer .totalength {
+    display: none !important;
+}
+
 footer > * {
     transition: transform 1s;
 }
@@ -291,6 +378,7 @@ footer .artistname {
 
 footer .playbar {
     height: 100px;
+    width: 176px;
     left: 50%;
     margin-left: -87.5px;
     top: 50%;
@@ -320,21 +408,35 @@ footer .progress {
     transform: translateY(-100%);
 }
 
+.fa-chevron-up {
+    display: block !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: white;
+    font-size: 2em;
+    margin-right: 1%;
+}
+
+.fa-arrow-left {
+    font-size: 2em;
+}
 
 
 /* /////////////////////// CSS Agrandissement lecteur //////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////// */
+
 .musicfull {
-    height: 74%;
+    height: 74.5%;
     width: 100%;
-    background-color: rgb(44, 39, 39);
-    bottom: -61.1%;
+    bottom: -62.0%;
     z-index: 10;
     overflow: hidden;
     transition: transform 1s;
     display: block;
+    background: rgb(133, 40, 40);;
 }
 
 .musicfullhide {
@@ -345,7 +447,7 @@ footer .progress {
     max-width: 70%;
     height: 55%;
     display: block;
-    margin: 10% auto;
+    margin: 5% auto;
 }
 
 .musicfull .textcontainer {
@@ -379,6 +481,20 @@ footer .progress {
     height: 10px;
 }
 
+.currentlength {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: inline-block !important;
+}
+
+.totalength {
+    position: relative;    
+    top: 0;  
+    right: 0;
+    display: inline-block !important;
+}
+
 .musicfull i {
     font-size: 1.8em;
     margin-top: 10px;
@@ -399,3 +515,5 @@ footer .progress {
 .pcsearchbar, .pcsearchwrapper {
     display: none;
 }
+
+
